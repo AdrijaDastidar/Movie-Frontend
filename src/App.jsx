@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ThemeProvider } from "../context/ThemeContext";
-import Navbar from './components/common/Navbar';
+import Navbar from './components/page/Navbar';
 import Home from './components/Home';
 import Movies from './components/Movies';
 // import Celebrities from './pages/Celebrities';
