@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 import './App.css'
+import './assets/boxicons-2.0.7/css/boxicons.min.css'
 import '../src/assets/css/style.css'
 
 createRoot(document.getElementById('root')).render(
