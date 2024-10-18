@@ -11,7 +11,7 @@ export default function Admin() {
     const [activeTab, setActiveTab] = useState("overview")  // Default to 'overview'
 
     return (
-        <div className="flex h-screen">
+        <div className="flex">
             {/* Sidebar */}
             <aside className="w-64 py-32 bg-gray-900 shadow-md">
                 <nav className="p-4">
@@ -77,7 +77,7 @@ export default function Admin() {
             </aside>
 
             {/* Main content */}
-            <main className="flex-1 p-8 overflow-auto">
+            <main className="flex-1 p-8 w-full">
                 <AdminNav />
                 <Tabs value={activeTab} onValueChange={setActiveTab}>
                     {/* Overview Tab */}

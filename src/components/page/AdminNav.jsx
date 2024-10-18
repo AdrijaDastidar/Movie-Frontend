@@ -1,4 +1,5 @@
 "use client"
+import { useState } from "react"
 import { Search, Bell, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,6 +11,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 export default function AdminNav() {
+  // State to track the currently selected navigation item
+  const [activeTab, setActiveTab] = useState("Dashboard")
 
   const navItems = [
     { name: "Dashboard", href: "/admin" },
@@ -28,12 +31,17 @@ export default function AdminNav() {
               </a>
             </div>
             <div className="hidden md:block ml-10">
-              <div className="flex items-baseline space-x-4">
+              <div className="flex items-baseline space-x-4 ">
                 {navItems.map((item) => (
                   <a
                     key={item.name}
                     href={item.href}
-                    className="text-muted-foreground hover:text-primary px-3 py-2 rounded-md text-sm font-medium"
+                    onClick={() => setActiveTab(item.name)} 
+                    className={`${
+                      activeTab === item.name
+                        ? "text-primary  text-blue-600"
+                        : "text-muted-foreground"
+                    } hover:text-primary px-3 py-2 rounded-md text-sm font-medium`}
                   >
                     {item.name}
                   </a>
@@ -46,7 +54,7 @@ export default function AdminNav() {
               <div className="ml-4 flex items-center md:ml-6">
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Search className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                    <Search className="h-4 w-4 p-3 text-muted-foreground" aria-hidden="true" />
                   </div>
                   <Input
                     type="text"
