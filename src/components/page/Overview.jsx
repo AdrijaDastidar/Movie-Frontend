@@ -1,8 +1,38 @@
 import React from 'react'
+"use client"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Film, BarChart3, PieChart, Users, DollarSign, Ticket, } from "lucide-react"
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, PieChart as RePieChart, Pie, Cell } from 'recharts';
+
 
 export default function Overview() {
+    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
+
+    // Example static array for movies
+    const movies = [
+        { title: 'Movie 1', popularity: 75 },
+        { title: 'Movie 2', popularity: 60 },
+        { title: 'Movie 3', popularity: 85 },
+        { title: 'Movie 4', popularity: 90 }
+    ];
+
+    const moviePopularity = movies.map(movie => ({
+        name: movie.title,
+        value: movie.popularity,
+    }));
+
+    const weeklyRevenue = [
+        { name: "Mon", revenue: 5000 },
+        { name: "Tue", revenue: 7000 },
+        { name: "Wed", revenue: 6500 },
+        { name: "Thu", revenue: 8000 },
+        { name: "Fri", revenue: 12000 },
+        { name: "Sat", revenue: 15000 },
+        { name: "Sun", revenue: 10000 },
+    ];
+
     return (
-        <TabsContent value="overview">
+        <>
             <h2 className="text-2xl font-bold mb-4">Dashboard Overview</h2>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Card>
@@ -49,7 +79,7 @@ export default function Overview() {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 mt-4">
                 <Card className="col-span-4">
                     <CardHeader>
-                        <CardTitle>Weekly Revenue</CardTitle>
+                        <CardTitle><BarChart3 className="h-4 w-4 inline-block mr-2" />Weekly Revenue</CardTitle>
                     </CardHeader>
                     <CardContent className="pl-2">
                         <ResponsiveContainer width="100%" height={300}>
@@ -64,7 +94,7 @@ export default function Overview() {
                 </Card>
                 <Card className="col-span-3">
                     <CardHeader>
-                        <CardTitle>Movie Popularity</CardTitle>
+                        <CardTitle><PieChart className="h-4 w-4 inline-block mr-2" />Movie Popularity</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <ResponsiveContainer width="100%" height={300}>
@@ -89,6 +119,6 @@ export default function Overview() {
                     </CardContent>
                 </Card>
             </div>
-        </TabsContent>
+        </>
     )
 }
