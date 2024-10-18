@@ -4,9 +4,7 @@ import { ThemeProvider } from '../context/ThemeContext';
 import Navbar from './components/page/Navbar';
 import Home from './components/Home';
 import Movies from './components/Movies';
-// import Celebrities from './pages/Celebrities';
-// import TopMovies from './pages/TopMovies';
-// import Blog from './pages/Blog';
+import AdminDashboard from './components/Admin';
 import Booking from './components/Booking';
 
 const App = () => {
@@ -21,6 +19,7 @@ const App = () => {
           <Route path="/top-movies" element={<TopMovies />} />
           <Route path="/blog" element={<Blog />} /> */}
           <Route path="/tickets" element={<Booking />} />
+          <Route path="/admin" element={<AdminDashboard />} /> 
         </Routes>
       </Router>
     </ThemeProvider>
