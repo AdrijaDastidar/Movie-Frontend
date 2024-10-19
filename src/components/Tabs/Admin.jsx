@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Tabs, TabsContent } from "@/components/ui/tabs"
-import { Film, Home, Theater, Compass } from "lucide-react" // Added Compass for Overview
+import { Film, Home, Theater, Compass } from "lucide-react" 
 import Overview from "../page/Admin/Overview"
 import Movie from "../page/Admin/Movie"
 import ShowTime from "../page/Admin/ShowTime"
@@ -8,8 +8,7 @@ import Auditorium from "../page/Admin/Auditorium"
 import AdminNav from "../page/Admin/AdminNav"
 
 export default function Admin() {
-    const [activeTab, setActiveTab] = useState("overview")  // Default to 'overview'
-
+    const [activeTab, setActiveTab] = useState("overview")  
     return (
         <div className="flex">
             {/* Sidebar */}

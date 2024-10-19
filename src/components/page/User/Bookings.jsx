@@ -10,10 +10,14 @@ import {
   PieChart,
   Popcorn,
 } from "lucide-react"
+const bookedTickets = [
+    { id: 1, movie: "Inception", date: "2023-06-15", time: "19:30", seats: ["A1", "A2"], total: 25.98 },
+    { id: 2, movie: "The Dark Knight", date: "2023-06-18", time: "20:00", seats: ["B3", "B4", "B5"], total: 41.97 },
+  ];
 
 export default function Bookings() {
   return (
-    <Card>
+    <Card className>
       <CardHeader>
         <CardTitle>Your Booked Tickets</CardTitle>
         <CardDescription>Manage your upcoming movie experiences</CardDescription>
@@ -26,21 +30,21 @@ export default function Bookings() {
                 <h4 className="text-lg font-semibold">{ticket.movie}</h4>
                 <Ticket className="w-5 h-5 text-primary" />
               </div>
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-gray-300">
                 <div className="flex items-center mt-1">
-                  <Calendar className="w-4 h-4 mr-2" />
+                  <Calendar className="w-4 h-4 mr-2 text-blue-400" />
                   <span>{ticket.date}</span>
                 </div>
-                <div className="flex items-center mt-1">
-                  <Clock className="w-4 h-4 mr-2" />
+                <div className="flex items-center mt-1 ">
+                  <Clock className="w-4 h-4 mr-2 text-purple-400" />
                   <span>{ticket.time}</span>
                 </div>
                 <div className="flex items-center mt-1">
-                  <Users className="w-4 h-4 mr-2" />
+                  <Users className="w-4 h-4 mr-2 text-yellow-700" />
                   <span>Seats: {ticket.seats.join(", ")}</span>
                 </div>
                 <div className="flex items-center mt-1">
-                  <DollarSign className="w-4 h-4 mr-2" />
+                  <DollarSign className="w-4 h-4 mr-2 text-green-600" />
                   <span>Total: ${ticket.total}</span>
                 </div>
               </div>
@@ -56,7 +60,7 @@ export default function Bookings() {
           <CardContent>
             <div className="flex justify-between items-center">
               <div className="text-center">
-                <PieChart className="w-8 h-8 mx-auto text-primary" />
+                <PieChart className="w-8 h-8 mx-auto text-red-400" />
                 <p className="mt-2 font-semibold">Most Booked</p>
                 <p className="text-sm text-gray-600">Inception</p>
               </div>

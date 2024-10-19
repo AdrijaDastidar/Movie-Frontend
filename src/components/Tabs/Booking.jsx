@@ -1,11 +1,11 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import React, { useState } from 'react';
-import poster from '../assets/img/p1.jpg';
-import a1 from '../assets/img/a1.jpg';
-import a2 from '../assets/img/a2.jpg';
-import a3 from '../assets/img/a3.jpg';
-import a4 from '../assets/img/a4.jpg';
+import poster from '../../assets/img/p1.jpg';
+import a1 from '../../assets/img/a1.jpg';
+import a2 from '../../assets/img/a2.jpg';
+import a3 from '../../assets/img/a3.jpg';
+import a4 from '../../assets/img/a4.jpg';
 
 export default function Component() {
   const [cart, setCart] = useState([]);

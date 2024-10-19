@@ -1,5 +1,5 @@
 import React from 'react';
-import hero from '../../assets/img/hero.mp4'; 
+import hero from '../../../assets/img/hero.mp4'; 
 
 
 const HeroSection = () => {

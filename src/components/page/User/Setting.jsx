@@ -1,14 +1,20 @@
-import React from 'react'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import {
-  CreditCard,
-  Mail,
-  Bell,
-  Eye,
-} from "lucide-react"
+import React, { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Mail, Eye } from "lucide-react";
 
 export default function Setting() {
+    // State variables for form inputs
+    const [email, setEmail] = useState('');
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log('Email:', email);
+        console.log('Current Password:', currentPassword);
+        console.log('New Password:', newPassword);
+    };
+
     return (
         <Card>
             <CardHeader>
@@ -16,9 +22,9 @@ export default function Setting() {
                 <CardDescription>Manage your account preferences</CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-200">Email</label>
                         <div className="mt-1 flex rounded-md shadow-sm">
                             <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500">
                                 <Mail className="h-5 w-5" />
@@ -27,57 +33,54 @@ export default function Setting() {
                                 type="email"
                                 name="email"
                                 id="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
                                 placeholder="you@example.com"
                             />
                         </div>
                     </div>
+
                     <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+                        <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-200">Current Password</label>
                         <div className="mt-1 flex rounded-md shadow-sm">
                             <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500">
                                 <Eye className="h-5 w-5" />
                             </span>
                             <input
                                 type="password"
-                                name="password"
-                                id="password"
+                                name="currentPassword"
+                                id="currentPassword"
+                                value={currentPassword}
+                                onChange={(e) => setCurrentPassword(e.target.value)}
                                 className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
-                                placeholder="••••••••"
+                                placeholder="Current Password"
                             />
                         </div>
                     </div>
+
                     <div>
-                        <label htmlFor="card" className="block text-sm font-medium text-gray-700">Credit Card</label>
+                        <label htmlFor="newPassword" className="block text-sm font-medium text-gray-200">New Password</label>
                         <div className="mt-1 flex rounded-md shadow-sm">
                             <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500">
-                                <CreditCard className="h-5 w-5" />
+                                <Eye className="h-5 w-5" />
                             </span>
                             <input
-                                type="text"
-                                name="card"
-                                id="card"
+                                type="password"
+                                name="newPassword"
+                                id="newPassword"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
                                 className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
-                                placeholder="1234 5678 9012 3456"
+                                placeholder="New-password"
                             />
                         </div>
                     </div>
-                    <div className="flex items-center">
-                        <input
-                            id="notifications"
-                            name="notifications"
-                            type="checkbox"
-                            className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                        />
-                        <label htmlFor="notifications" className="ml-2 block text-sm text-gray-900">
-                            Receive email notifications
-                        </label>
-                    </div>
-                </div>
+                </form>
             </CardContent>
             <CardFooter>
-                <Button className="w-full">Save Changes</Button>
+                <Button onClick={handleSubmit} className="w-full">Save Changes</Button>
             </CardFooter>
         </Card>
-    )
+    );
 }
