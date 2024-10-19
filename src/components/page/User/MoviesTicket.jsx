@@ -22,6 +22,11 @@ export default function MoviesTicket() {
       { id: 4, title: "Pulp Fiction", rating: 4.6, duration: "2h 34min", image: "/placeholder.svg?height=120&width=80", price: 11.99, popularity: 92 },
       { id: 5, title: "Forrest Gump", rating: 4.8, duration: "2h 22min", image: "/placeholder.svg?height=120&width=80", price: 10.99, popularity: 96 },
     ]
+
+    const bookedTickets = [
+      { id: 1, movie: "Inception", date: "2023-06-15", time: "19:30", seats: ["A1", "A2"], total: 25.98 },
+      { id: 2, movie: "The Dark Knight", date: "2023-06-18", time: "20:00", seats: ["B3", "B4", "B5"], total: 41.97 },
+    ]
   
   return (
     <Card>
