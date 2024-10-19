@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
-import TitleDetails from '../common/TitleDetails'
-import ActorList from '../common/ActorList'
-import ActorDetails from '../common/ActorDetails'
-import Loader from '../common/Loader'
+import TitleDetails from '../../common/TitleDetails'
+import ActorList from '../../common/ActorList'
+import ActorDetails from '../../common/ActorDetails'
+import Loader from '../../common/Loader'
 
-import TMDB from '../../api/api'
+import TMDB from '../../../api/api'
 
 function TitlePage() {
 	const { type, id } = useParams()

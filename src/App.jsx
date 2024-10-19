@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ThemeProvider } from '../context/ThemeContext';
-import Navbar from './components/page/Navbar';
+import Navbar from './components/page/Home/Navbar';
 import Home from './components/Home';
-import Movies from './components/Movies';
-import Admin from './components/Admin';
-import Booking from './components/Booking';
+import Movies from './components/Tabs/Movies';
+import Admin from './components/Tabs/Admin';
+import Booking from './components/Tabs/Booking';
 
 const App = () => {
   return (

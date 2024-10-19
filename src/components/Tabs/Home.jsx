@@ -1,5 +1,5 @@
 import React from 'react'
-import HeroSection from './page/HeroSection'
+import HeroSection from './page/Home/HeroSection'
 export default function Home() {
   return (
     <div>

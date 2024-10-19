@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import HomePage from '../components/page/HomePage';
-import TitlePage from '../components/page/TitlePage';
-import NotFoundPage from '../components/page/NotFoundPage';
+import TitlePage from '../page/tmdb/TitlePage';
+import NotFoundPage from '../page/tmdb/NotFoundPage';
 
 const Movies = () => {
   const [darkMode, setDarkMode] = useState(
