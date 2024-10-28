@@ -14,6 +14,9 @@ export default function MoviesTicket() {
     { id: 5, title: "Forrest Gump", rating: 4.8, duration: "2h 22min", image: p1, price: 10.99, popularity: 96 },
   ];
 
+  const handleClick = () => {
+    window.location.href = 'http://localhost:5173/tickets';
+  }
 
   return (
     <Card>
@@ -48,8 +51,9 @@ export default function MoviesTicket() {
                 </div>
               </div>
               <div className="cursor-pointer flex items-center justify-center text-green-600 border border-green-600 hover:bg-green-600 hover:text-white rounded px-4 py-2">
-                <span>Book Now</span>
+                <span onClick={handleClick}>Book Now</span>
               </div>
+
             </div>
           ))}
         </ScrollArea>

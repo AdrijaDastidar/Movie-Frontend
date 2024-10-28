@@ -1,6 +1,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import React, { useState } from 'react';
+import axios from "axios";
 import poster from '../../assets/img/p1.jpg';
 import a1 from '../../assets/img/a1.jpg';
 import a2 from '../../assets/img/a2.jpg';
@@ -42,6 +43,42 @@ export default function Component() {
       IMAX: ["9:30 AM", "12:15 PM", "4:00 PM", "7:00 PM", "10:00 PM"]
     }
   };
+
+  const checkOutHandler = async (amount) => {
+    try {
+      // Fetch order
+      const { data } = await axios.post('http://localhost:1000/payment/checkout', { amount });
+      console.log("Order:", data);
+  
+      // Fetch key
+      const { data: keyResponse } = await axios.get('http://localhost:1000/key');
+      const key = keyResponse.key;
+  
+      // Configure Razorpay options
+      const options = {
+        key: key,
+        amount: amount * 100,
+        currency: "INR",
+        name: "User",
+        description: "Movie ticket booking",
+        order_id: data.id,
+        callback_url: "http://localhost:1000/payment/paymentVerification",
+        prefill: {
+          name: "User",
+          email: "user@example.com",
+          contact: "1234567890"
+        },
+        theme: { color: "#528FF0" }
+      };
+  
+      // Open Razorpay payment modal
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      console.error("Error in checkout:", error);
+    }
+  };
+  
 
   const locations = Object.keys(theaters); // ["Pune", "Kothrud"]
 
@@ -277,7 +314,7 @@ export default function Component() {
                   <span>Rs {totalCost}</span>
                 </div>
                 <div className="flex justify-end">
-                  <Button size="lg" className="bg-blue-600 text-white">Proceed to Payment</Button>
+                  <Button onClick = {()=>checkOutHandler(totalCost)} size="lg" className="bg-blue-600 text-white">Proceed to Payment</Button>
                 </div>
               </div>
             </CardContent>

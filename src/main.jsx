@@ -5,9 +5,13 @@ import './index.css'
 import './App.css'
 import './assets/boxicons-2.0.7/css/boxicons.min.css'
 import '../src/assets/css/style.css'
+import { Provider } from 'react-redux'
+import store from './redux/store.js'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <Provider store={store} >
+      <App />
+    </Provider>
   </StrictMode>,
 )

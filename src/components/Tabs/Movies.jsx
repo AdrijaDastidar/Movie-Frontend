@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
-import HomePage from '../Tabs/Home';
+import HomePage from '../page/tmdb/HomePage';
 import TitlePage from '../page/tmdb/TitlePage';
 import NotFoundPage from '../page/tmdb/NotFoundPage';
 

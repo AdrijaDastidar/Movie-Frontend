@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useReducer } from 'react'
 
-import Hero from '../common/Hero'
-import Search from '../common/Search'
-import TitleList from '../common/TitleList'
-import Button from '../common/Button'
-import Loader from '../common/Loader'
-import End from '../common/End'
+import Hero from '../../common/Hero'
+import Search from '../../common/Search'
+import TitleList from '../../common/TitleList'
+import Loader from '../../common/Loader'
+import End from '../../common/End'
 
-import TMDB from '../../api/api'
+import TMDB from '../../../api/api'
 
 const initialTitlesState = { 
   page: 0,

@@ -5,15 +5,14 @@ import Setting from "../page/User/Setting";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Film, Calendar, Settings, LogOut, Search } from "lucide-react";
 import p1 from "../../assets/img/x1.jpg";
-
 export default function BookingDashboard() {
   const [activeTab, setActiveTab] = useState("movies");
 
   return (
-    <div className="flex">
+    <div className="flex w-lvw">
       {/* Sidebar */}
       <aside className="w-64 py-32 px-2 bg-gray-900 shadow-md h-screen sticky top-0">
         <div className="px-4">
@@ -22,11 +21,10 @@ export default function BookingDashboard() {
         <nav className="mt-6">
           <a
             href="#"
-            className={`w-full flex items-center px-4 py-2 rounded-lg transition-all duration-200 ${
-              activeTab === "movies"
+            className={`w-full flex items-center px-4 py-2 rounded-lg transition-all duration-200 ${activeTab === "movies"
                 ? "text-white bg-gray-700"
                 : "text-gray-400 hover:bg-gray-700 hover:text-white"
-            }`}
+              }`}
             onClick={() => setActiveTab("movies")}
           >
             <Film className="w-5 h-5 mr-3" />
@@ -34,11 +32,10 @@ export default function BookingDashboard() {
           </a>
           <a
             href="#"
-            className={`flex w-full items-center px-4 py-2 mt-1 rounded-lg transition-all duration-200 ${
-              activeTab === "bookings"
+            className={`flex w-full items-center px-4 py-2 mt-1 rounded-lg transition-all duration-200 ${activeTab === "bookings"
                 ? "text-white bg-gray-700"
                 : "text-gray-400 hover:bg-gray-700 hover:text-white"
-            }`}
+              }`}
             onClick={() => setActiveTab("bookings")}
           >
             <Calendar className="w-5 h-5 mr-3" />
@@ -46,11 +43,10 @@ export default function BookingDashboard() {
           </a>
           <a
             href="#"
-            className={`flex w-full items-center px-4 py-2 mt-1 rounded-lg transition-all duration-200 ${
-              activeTab === "settings"
+            className={`flex w-full items-center px-4 py-2 mt-1 rounded-lg transition-all duration-200 ${activeTab === "settings"
                 ? "text-white bg-gray-700"
                 : "text-gray-400 hover:bg-gray-700 hover:text-white"
-            }`}
+              }`}
             onClick={() => setActiveTab("settings")}
           >
             <Settings className="w-5 h-5 mr-3" />
@@ -92,19 +88,18 @@ export default function BookingDashboard() {
             />
           </CardContent>
         </Card>
-
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsContent value="movies">
-            <MoviesTicket />
-          </TabsContent>
-          <TabsContent value="bookings">
-            <Bookings />
-          </TabsContent>
-          <TabsContent value="settings">
-            <Setting />
-          </TabsContent>
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsContent value="movies">
+              <MoviesTicket />
+            </TabsContent>
+            <TabsContent value="bookings">
+              <Bookings />
+            </TabsContent>
+            <TabsContent value="settings">
+              <Setting />
+            </TabsContent>
         </Tabs>
-      </main>
-    </div>
+    </main>
+    </div >
   );
 }
