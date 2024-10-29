@@ -1,4 +1,3 @@
-// src/redux/movieSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -19,16 +18,12 @@ export const fetchMovies = createAsyncThunk('movies/fetchMovies', async () => {
 });
 
 export const addMovie = createAsyncThunk('movies/addMovie', async (movie) => {
-    const response = await axios.post(
-        `${BASE_URL}/create`, 
-        movie, 
-        {
+    const response = await axios.post(`${BASE_URL}/create`, movie, {
             headers: { 
                 'Content-Type': 'application/json',
                 Authorization: `${ADMIN_TOKEN}`
             },
-        }
-    );
+        });
     return response.data;
 });
 
@@ -91,5 +86,4 @@ const movieSlice = createSlice({
     },
 });
 
-// Export reducer
 export default movieSlice.reducer;

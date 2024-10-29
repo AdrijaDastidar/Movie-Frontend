@@ -1,13 +1,14 @@
-// src/redux/store.js
 import { configureStore } from '@reduxjs/toolkit';
-import theaterReducer from './theaterSlice';
+import showTimeReducer from './showTimeSlice';
 import movieReducer from './movieSlice';
+import theaterReducer from './theaterSlice';
 
 const store = configureStore({
-  reducer: {
-    theaters: theaterReducer,
-    movies: movieReducer,
-  },
+    reducer: {
+        theaters: theaterReducer,
+        movies: movieReducer,
+        showtimes: showTimeReducer,
+    },
 });
 
 export default store;

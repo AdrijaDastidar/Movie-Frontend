@@ -9,9 +9,7 @@ export const fetchTheaters = createAsyncThunk('theater/fetchTheaters', async () 
         throw new Error('Failed to fetch theaters');
     }
     const data = await response.json();
-    console.log("Fetched Theaters:", data); // Debugging log
-    // Extract the array from the response object
-    return Array.isArray(data.theaters) ? data.theaters : []; // Ensure the data is an array
+    return Array.isArray(data.theaters) ? data.theaters : []; 
 });
 
 // Async thunk for adding a theater
@@ -26,8 +24,6 @@ export const addTheater = createAsyncThunk('theater/addTheater', async (theater)
     if (!response.ok) {
         throw new Error('Failed to add theater');
     }
-    const data = await response.json(); // Return the newly created theater object
-    console.log("Added Theater:", data); // Debugging log
     return data;
 });
 
@@ -44,8 +40,7 @@ export const updateTheater = createAsyncThunk('theater/updateTheater', async (th
     if (!response.ok) {
         throw new Error('Failed to update theater');
     }
-    const data = await response.json(); // Return the updated theater object
-    console.log("Updated Theater:", data); // Debugging log
+    const data = await response.json();
     return data;
 });
 
@@ -57,8 +52,7 @@ export const deleteTheater = createAsyncThunk('theater/deleteTheater', async (id
     if (!response.ok) {
         throw new Error('Failed to delete theater');
     }
-    console.log(`Deleted Theater ID: ${id}`); // Debugging log
-    return id; // Return the ID of the deleted theater
+    return id;
 });
 
 // Slice definition
@@ -74,26 +68,23 @@ const theaterSlice = createSlice({
         builder
             .addCase(fetchTheaters.pending, (state) => {
                 state.loading = true;
-                state.error = null; // Reset error on new fetch
-                console.log("Fetching theaters..."); // Debugging log
+                state.error = null; 
             })
             .addCase(fetchTheaters.fulfilled, (state, action) => {
                 state.loading = false;
-                state.theaters = action.payload; // Assuming the payload is an array of theaters
-                console.log("Fetched theaters successfully:", action.payload); // Debugging log
+                state.theaters = action.payload; 
             })
             .addCase(fetchTheaters.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.error.message; // Set error message
-                console.error("Error fetching theaters:", action.error.message); // Debugging log
+                state.error = action.error.message; 
             })
             .addCase(addTheater.fulfilled, (state, action) => {
-                state.theaters.push(action.payload); // Add the new theater directly
+                state.theaters.push(action.payload); 
             })
             .addCase(updateTheater.fulfilled, (state, action) => {
                 const index = state.theaters.findIndex(theater => theater._id === action.payload._id);
                 if (index !== -1) {
-                    state.theaters[index] = action.payload; // Update the theater with the payload
+                    state.theaters[index] = action.payload; 
                 }
             })
             .addCase(deleteTheater.fulfilled, (state, action) => {
