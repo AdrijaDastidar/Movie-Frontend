@@ -1,19 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Mail, Eye } from "lucide-react";
+import { useDispatch, useSelector } from 'react-redux';
+import { updatePassword, clearMessages } from '@/redux/settingSlice'; // Adjust the path accordingly
 
 export default function Setting() {
-    // State variables for form inputs
+    const dispatch = useDispatch();
     const [email, setEmail] = useState('');
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
+
+    const { loading, error, successMessage } = useSelector((state) => state.settings);
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Email:', email);
-        console.log('Current Password:', currentPassword);
-        console.log('New Password:', newPassword);
+        dispatch(updatePassword({ email, currentPassword, newPassword }));
     };
+
+    useEffect(() => {
+        return () => {
+            dispatch(clearMessages());
+        };
+    }, [dispatch]);
 
     return (
         <Card>
@@ -37,6 +46,7 @@ export default function Setting() {
                                 onChange={(e) => setEmail(e.target.value)}
                                 className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
                                 placeholder="you@example.com"
+                                required 
                             />
                         </div>
                     </div>
@@ -55,6 +65,7 @@ export default function Setting() {
                                 onChange={(e) => setCurrentPassword(e.target.value)}
                                 className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
                                 placeholder="Current Password"
+                                required
                             />
                         </div>
                     </div>
@@ -72,14 +83,19 @@ export default function Setting() {
                                 value={newPassword}
                                 onChange={(e) => setNewPassword(e.target.value)}
                                 className="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300"
-                                placeholder="New-password"
+                                placeholder="New Password"
+                                required 
                             />
                         </div>
                     </div>
                 </form>
+                {error && <p className="text-red-500">{error}</p>}
+                {successMessage && <p className="text-green-500">{successMessage}</p>}
             </CardContent>
             <CardFooter>
-                <Button onClick={handleSubmit} className="w-full">Save Changes</Button>
+                <Button onClick={handleSubmit} className="w-full" disabled={loading}>
+                    {loading ? 'Updating...' : 'Save Changes'}
+                </Button>
             </CardFooter>
         </Card>
     );
