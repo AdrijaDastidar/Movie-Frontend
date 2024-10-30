@@ -38,12 +38,11 @@ export default function ShowTime() {
     const [editingShowtimeId, setEditingShowtimeId] = useState(null);
 
     useEffect(() => {
-        dispatch(fetchMovies()).then(() => console.log('Movies:', movies));
-        dispatch(fetchTheaters()).then(() => console.log('Theaters:', theaters));
-        dispatch(fetchShowTimes()).then(() => console.log('Showtimes:', showtimes));
+        dispatch(fetchMovies());
+        dispatch(fetchTheaters());
+        dispatch(fetchShowTimes());
     }, [dispatch]);
     
-
     const handleAddShowtime = () => {
         const newShowtime = {
             movieId: selectedMovieId,

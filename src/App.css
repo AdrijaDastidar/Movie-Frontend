@@ -11,7 +11,9 @@
 :root {
   --color-white: #ffffff;
   --color-yellow: #fde02f;
+  overflow-x: hidden;
 }
+
 /* Container styles */
 .box {
   width: 100%;

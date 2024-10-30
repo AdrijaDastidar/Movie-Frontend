@@ -1,19 +1,108 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from "axios";
+import { useDispatch, useSelector } from 'react-redux';
+import { createBooking, fetchMovieById } from '../../redux/bookingSlice.js';
+import { fetchShowTimes } from '../../redux/showTimeSlice.js';
+import { fetchTheaters } from '../../redux/theaterSlice.js';
 import poster from '../../assets/img/p1.jpg';
 import a1 from '../../assets/img/a1.jpg';
 import a2 from '../../assets/img/a2.jpg';
 import a3 from '../../assets/img/a3.jpg';
 import a4 from '../../assets/img/a4.jpg';
 
-export default function Component() {
+export default function Booking() {
+  const dispatch = useDispatch();
   const [cart, setCart] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState("");
   const [selectedTheater, setSelectedTheater] = useState("");
   const [selectedShowtime, setSelectedShowtime] = useState("");
+  const [showTimes, setShowTimes] = useState([]);
+  const [theaters, setTheaters] = useState([]);
+  const [filteredTheaters, setFilteredTheaters] = useState([]);
+  const [filteredShowtimes, setFilteredShowtimes] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState(new Set());
+  const [movieDetails, setMovieDetails] = useState(null);
+
+  const movieId = "6720ec7cf84f3c58057b2bfa";
+
+  useEffect(() => {
+    const fetchDetails = async () => {
+      try {
+        const response = await dispatch(fetchMovieById(movieId));
+        setMovieDetails(response.payload);
+      } catch (error) {
+        console.error("Failed to fetch movie details:", error);
+      }
+    };
+
+    const fetchTheaterAndShowtimeData = async () => {
+      try {
+        const theatersResponse = await dispatch(fetchTheaters());
+        const showtimesResponse = await dispatch(fetchShowTimes());
+        const filteredShowtimes = showtimesResponse.payload.filter(showTime => showTime.movieId === movieId);
+        setTheaters(theatersResponse.payload);
+        setShowTimes(showtimesResponse.payload);
+        setFilteredShowtimes(filteredShowtimes);
+
+      } catch (error) {
+        console.error("Failed to fetch theaters or showtimes:", error);
+      }
+    };
+
+    fetchDetails();
+    fetchTheaterAndShowtimeData();
+  }, [dispatch, movieId]);
+
+  useEffect(() => {
+    if (selectedLocation) {
+      const theatersInLocation = theaters.filter(theater => theater.city === selectedLocation);
+      setFilteredTheaters(theatersInLocation);
+    } else {
+      setFilteredTheaters([]);
+    }
+  }, [selectedLocation, theaters]);
+
+  useEffect(() => {
+    if (selectedTheater) {
+      const showtimesForTheater = showTimes.filter(
+        showtime => showtime.theaterId === filteredTheaters.find(theater => theater.name === selectedTheater)?._id
+      );
+      setFilteredShowtimes(showtimesForTheater);
+    } else {
+      setFilteredShowtimes([]);
+    }
+  }, [selectedTheater, filteredTheaters, showTimes]);
+
+  const locations = Array.from(new Set(theaters.map(theater => theater.city)));
+
+  const handleBooking = async (amount) => {
+    if (!selectedShowtime || selectedSeats.size === 0) {
+        alert("Please select a showtime and seats before booking.");
+        return;
+    }
+
+    const showTimeId = filteredShowtimes.find(showtime => showtime.time === selectedShowtime)?._id;
+    const seatNumbers = Array.from(selectedSeats);
+    const addOnIds = cart.map(item => item.id).filter(Boolean);
+    console.log("Selected Seats:", Array.from(selectedSeats)); 
+    console.log(showTimeId);
+    console.log(addOnIds);
+    console.log("Cost:", amount);
+    try {
+        await Promise.all(seatNumbers.map(seatNumber => 
+            dispatch(createBooking({ showTimeId, seatNumber, addOn: addOnIds, cost: amount }))
+        ));
+
+        alert("Booking successful!");
+        setSelectedSeats(new Set());
+    } catch (error) {
+        console.error("Booking failed:", error);
+        alert("Booking failed. Please try again.");
+    }
+};
+
 
   const seatPrices = {
     normal: 120,
@@ -33,27 +122,16 @@ export default function Component() {
     type: seatTypes.find(type => type.rows.some(row => Math.ceil((i + 1) / 8) === row)).type
   }));
 
-  const theaters = {
-    Pune: {
-      PVR: ["10:00 AM", "1:30 PM", "5:00 PM", "8:30 PM", "11:00 PM"],
-      IMAX: ["9:00 AM", "12:30 PM", "4:30 PM", "7:30 PM"]
-    },
-    Kothrud: {
-      PVR: ["10:15 AM", "1:45 PM", "5:15 PM", "8:45 PM"],
-      IMAX: ["9:30 AM", "12:15 PM", "4:00 PM", "7:00 PM", "10:00 PM"]
-    }
-  };
-
   const checkOutHandler = async (amount) => {
     try {
       // Fetch order
       const { data } = await axios.post('http://localhost:1000/payment/checkout', { amount });
       console.log("Order:", data);
-  
+
       // Fetch key
       const { data: keyResponse } = await axios.get('http://localhost:1000/key');
       const key = keyResponse.key;
-  
+
       // Configure Razorpay options
       const options = {
         key: key,
@@ -70,7 +148,7 @@ export default function Component() {
         },
         theme: { color: "#528FF0" }
       };
-  
+
       // Open Razorpay payment modal
       const rzp = new window.Razorpay(options);
       rzp.open();
@@ -78,12 +156,9 @@ export default function Component() {
       console.error("Error in checkout:", error);
     }
   };
-  
-
-  const locations = Object.keys(theaters); // ["Pune", "Kothrud"]
-
   const handleSeatClick = (seat) => {
     if (seat.isBooked) return;
+
     setSelectedSeats(prev => {
       const updated = new Set(prev);
       if (updated.has(seat.number)) {
@@ -94,14 +169,18 @@ export default function Component() {
       return updated;
     });
   };
+  useEffect(() => {
+    console.log("Selected Seats:", Array.from(selectedSeats)); 
+  }, [selectedSeats]); 
+
 
   const handleAddToCart = () => {
     const seatsArray = Array.from(selectedSeats).map(seatNumber => {
       const seat = seats.find(s => s.number === seatNumber);
+      alert("Seat added to cart");
       return { ...seat, price: seatPrices[seat.type], quantity: 1 };
     });
     setCart(prev => [...prev, ...seatsArray]);
-    setSelectedSeats(new Set());
   };
 
   const totalCost = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -122,29 +201,15 @@ export default function Component() {
               />
             </div>
             <div className="grid gap-2">
-              <h1 className="text-2xl font-bold">Avengers: Endgame</h1>
-              <p className="text-muted-foreground">
-                After the devastating events of Avengers: Infinity War, the universe is in ruins. With the help of
-                remaining allies, the Avengers assemble once more in order to undo Thanos' actions and restore order to
-                the universe.
-              </p>
+              <h1 className="text-2xl font-bold">{movieDetails?.title || "Movie Title"}</h1>
+              <p className="text-muted-foreground">{movieDetails?.description || "Movie Description"}</p>
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1">
-                  <StarIcon className="w-5 h-5 fill-primary" />
-                  <StarIcon className="w-5 h-5 fill-primary" />
-                  <StarIcon className="w-5 h-5 fill-primary" />
-                  <StarIcon className="w-5 h-5 fill-primary" />
-                  <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
+                  {[...Array(movieDetails?.rating)].map((_, index) => (
+                    <StarIcon key={index} className={`w-5 h-5 ${index < (movieDetails?.rating || 0) ? "fill-yellow-400" : "fill-yellow-400"}`} />
+                  ))}
                 </div>
-                <span className="font-medium">8.4</span>
-              </div>
-              <div className="flex items-center gap-4">
-                <div>
-                  <span className="font-medium">Cast:</span> Robert Downey Jr., Chris Evans, Mark Ruffalo
-                </div>
-                <div>
-                  <span className="font-medium">Genre:</span> Action, Adventure, Drama
-                </div>
+                <span className="font-medium">{movieDetails?.rating || "N/A"}</span>
               </div>
             </div>
           </div>
@@ -163,10 +228,8 @@ export default function Component() {
                       value={selectedLocation}
                       onChange={(e) => {
                         setSelectedLocation(e.target.value);
-                        setSelectedTheater(""); 
-                        setSelectedShowtime(""); 
                       }}
-                      className="border border-gray-300 rounded p-2  text-black"
+                      className="border border-gray-300 rounded p-2 text-black"
                     >
                       <option value="">Select Location</option>
                       {locations.map(location => (
@@ -174,7 +237,6 @@ export default function Component() {
                       ))}
                     </select>
                   </div>
-
                   {/* Theater Dropdown */}
                   {selectedLocation && (
                     <div className="flex flex-col">
@@ -185,11 +247,11 @@ export default function Component() {
                           setSelectedTheater(e.target.value);
                           setSelectedShowtime("");
                         }}
-                        className="border border-gray-300 rounded p-2  text-black"
+                        className="border border-gray-300 rounded p-2 text-black"
                       >
                         <option value="">Select Theater</option>
-                        {Object.keys(theaters[selectedLocation]).map(theater => (
-                          <option key={theater} value={theater}>{theater}</option>
+                        {filteredTheaters.map(theater => (
+                          <option key={theater.name} value={theater.name}>{theater.name}</option>
                         ))}
                       </select>
                     </div>
@@ -200,19 +262,20 @@ export default function Component() {
                     <div>
                       <label className="font-medium">Available Showtimes</label>
                       <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-2">
-                        {theaters[selectedLocation][selectedTheater].map(showtime => (
+                        {filteredShowtimes.map(showtime => (
                           <div
-                            key={showtime}
+                            key={showtime.time}
                             className={`aspect-square w-32 h-10 rounded-md flex items-center justify-center cursor-pointer transition-colors 
-                                        ${selectedShowtime === showtime ? 'bg-green-400 text-white' : 'bg-violet-200 text-black'}
-                                         hover:bg-green-300`}
-                            onClick={() => setSelectedShowtime(showtime)}
+                      ${selectedShowtime === showtime.time ? 'bg-green-400 text-white' : 'bg-violet-200 text-black'}
+                       hover:bg-green-300`}
+                            onClick={() => setSelectedShowtime(showtime.time)}
                           >
-                            {showtime}
+                            {showtime.time}
                           </div>
                         ))}
                       </div>
-                    </div>)}
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -267,10 +330,10 @@ export default function Component() {
             </CardHeader>
             <CardContent>
               <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {[{ name: "Popcorn", price: 299, img: a1 },
-                { name: "Nachos", price: 249, img: a2 },
-                { name: "Nuggets", price: 199, img: a3 },
-                { name: "Soft Drink", price: 79, img: a4 }]
+                {[{ id : 1, name: "Popcorn", price: 299, img: a1 },
+                { id : 2, name: "Nachos", price: 249, img: a2 },
+                { id : 3, name: "Nuggets", price: 199, img: a3 },
+                { id : 4, name: "Soft Drink", price: 79, img: a4 }]
                   .map(item => (
                     <div key={item.name} className="grid gap-2">
                       <div className="bg-background rounded-lg shadow-sm overflow-hidden">
@@ -314,7 +377,7 @@ export default function Component() {
                   <span>Rs {totalCost}</span>
                 </div>
                 <div className="flex justify-end">
-                  <Button onClick = {()=>checkOutHandler(totalCost)} size="lg" className="bg-blue-600 text-white">Proceed to Payment</Button>
+                  <Button onClick={()=>handleBooking(totalCost)} size="lg" className="bg-blue-600 text-white">Proceed to Payment</Button>
                 </div>
               </div>
             </CardContent>

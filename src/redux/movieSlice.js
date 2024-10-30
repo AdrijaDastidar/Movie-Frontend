@@ -16,7 +16,7 @@ export const fetchMovies = createAsyncThunk('movies/fetchMovies', async () => {
     const response = await axios.get(BASE_URL);
     return response.data;
 });
-
+  
 export const addMovie = createAsyncThunk('movies/addMovie', async (movie) => {
     const response = await axios.post(`${BASE_URL}/create`, movie, {
             headers: { 
@@ -82,7 +82,7 @@ const movieSlice = createSlice({
             })
             .addCase(deleteMovie.fulfilled, (state, action) => {
                 state.movies = state.movies.filter(movie => movie._id !== action.payload);
-            });
+            })
     },
 });
 

@@ -42,7 +42,7 @@ export default function Auditoriums() {
         const { _id, name, city, state } = updateAuditorium; 
         await dispatch(updateTheater({ id: _id, name, city, state }));
         dispatch(fetchTheaters());
-        setUpdateAuditorium(null); // Reset after update
+        setUpdateAuditorium(null); 
     };
 
     const handleDeleteTheater = async (id) => {
