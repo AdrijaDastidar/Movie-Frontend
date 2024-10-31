@@ -6,18 +6,20 @@ import { Clock, Star, DollarSign, TrendingUp, BarChart } from "lucide-react";
 import p1 from "../../../assets/img/p1.jpg"; 
 import { fetchMovies } from "../../../redux/movieSlice"; 
 import { setSelectedMovieId } from "../../../redux/bookingSlice";
+import { useNavigate } from 'react-router-dom';
 
 export default function MoviesTicket() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { movies, loading, error } = useSelector((state) => state.movies);
+
   useEffect(() => {
     dispatch(fetchMovies());
   }, [dispatch]);
 
   const handleClick = (movieId) => {
     dispatch(setSelectedMovieId(movieId));
-    // console.log(movieId);
-    window.location.href = `http://localhost:5173/tickets/`;
+    navigate(`/tickets`); 
   };
 
   const getRandomPrice = () => Math.floor(Math.random() * (600 - 400 + 1)) + 400;

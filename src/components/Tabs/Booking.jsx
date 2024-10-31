@@ -2,7 +2,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
-import { useDispatch} from 'react-redux';
+import { useDispatch, useSelector} from 'react-redux';
 import { createBooking, fetchMovieById } from '../../redux/bookingSlice.js';
 import { fetchShowTimes } from '../../redux/showTimeSlice.js';
 import { fetchTheaters } from '../../redux/theaterSlice.js';
@@ -15,6 +15,7 @@ import a4 from '../../assets/img/a4.jpg';
 export default function Booking() {
   const dispatch = useDispatch();
   const [cart, setCart] = useState([]);
+  const bookingsId = useSelector((state) => state.bookings.selectedMovieId);  
   const [selectedLocation, setSelectedLocation] = useState("");
   const [selectedTheater, setSelectedTheater] = useState("");
   const [selectedShowtime, setSelectedShowtime] = useState("");
@@ -25,12 +26,12 @@ export default function Booking() {
   const [selectedSeats, setSelectedSeats] = useState(new Set());
   const [movieDetails, setMovieDetails] = useState(null);
 
-  const movieId = "6720ec7cf84f3c58057b2bfa";
+  // const movieId = "6720ec7cf84f3c58057b2bfa";
 
   useEffect(() => {
     const fetchDetails = async () => {
       try {
-        const response = await dispatch(fetchMovieById(movieId));
+        const response = await dispatch(fetchMovieById(bookingsId));
         setMovieDetails(response.payload);
       } catch (error) {
         console.error("Failed to fetch movie details:", error);
@@ -41,7 +42,7 @@ export default function Booking() {
       try {
         const theatersResponse = await dispatch(fetchTheaters());
         const showtimesResponse = await dispatch(fetchShowTimes());
-        const filteredShowtimes = showtimesResponse.payload.filter(showTime => showTime.movieId === movieId);
+        const filteredShowtimes = showtimesResponse.payload.filter(showTime => showTime.movieId === bookingsId);
         setTheaters(theatersResponse.payload);
         setShowTimes(showtimesResponse.payload);
         setFilteredShowtimes(filteredShowtimes);
@@ -53,7 +54,7 @@ export default function Booking() {
 
     fetchDetails();
     fetchTheaterAndShowtimeData();
-  }, [dispatch, movieId]);
+  }, [dispatch, bookingsId]);
 
   useEffect(() => {
     if (selectedLocation) {

@@ -1,4 +1,3 @@
-// store.js
 import { configureStore } from '@reduxjs/toolkit';
 import showTimeReducer from './showTimeSlice';
 import movieReducer from './movieSlice';

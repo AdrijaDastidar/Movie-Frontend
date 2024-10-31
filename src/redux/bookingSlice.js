@@ -1,7 +1,6 @@
 // bookingSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { findShowTime } from './showTimeSlice';
 
 const USER_TOKEN =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MWNlNWRmMGE3YjM0YTMzZTA2Y2QwMSIsImlhdCI6MTczMDM5NzMyMSwiZXhwIjoxNzMwNDA4MTIxfQ.aWSuBPvP9cMq9DgPeitMPDub7ESbwTfPRQloKqvNnJ4";
@@ -11,8 +10,7 @@ export const createBooking = createAsyncThunk(
   "booking/createBooking",
   async ({ showTimeId, seatNumber, addOn, cost }) => {
     const response = await axios.post(
-      "http://localhost:1000/booking/create",
-      {
+      "http://localhost:1000/booking/create",{
         showTimeId,
         seatNumber,
         addOn,
@@ -70,10 +68,7 @@ const bookingSlice = createSlice({
   reducers: {
     setSelectedMovieId: (state, action) => {
       state.selectedMovieId = action.payload;
-    },
-    clearSelectedMovieId: (state) => {
-      state.selectedMovieId = null;
-    },
+    }
   },
   extraReducers: (builder) => {
     builder
