@@ -13,7 +13,7 @@ export default function Bookings() {
   const bookings = useSelector((state) => state.bookings.bookings);
   const showTimes = useSelector((state) => state.showtimes.showtimes);
   const movies = useSelector((state) => state.movies.movies);
-  const theaters = useSelector((state) => state.theaters.theaters); // Make sure you have theaters in the state
+  const theaters = useSelector((state) => state.theaters.theaters);
   const loading = useSelector((state) => state.showtimes.loading);
   const error = useSelector((state) => state.showtimes.error);
 
@@ -64,37 +64,37 @@ export default function Bookings() {
               const theater = theaters.find(t => t._id === (showTime ? showTime.theaterId : null));
 
               return (
-                <div key={ticket._id} className="mb-4 p-4 border rounded-lg">
+                <div key={ticket._id} className="mb-4 p-4 border rounded-lg"> 
                   <div className="flex justify-between items-center mb-2">
                     <h4 className="text-lg font-semibold">{movie ? movie.title : 'N/A'}</h4>
                     <Ticket className="w-5 h-5 text-primary" />
                   </div>
-                  <div className="text-sm text-gray-300">
-                    <div className="flex items-center mt-1">
+                  <div className="grid  grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-300">
+                    <div className="flex items-center">
                       <Building className="w-4 h-4 mr-2 text-gray-400" />
-                      <span className="text-sm">Theater : {theater ? theater.name : 'N/A'}</span>
+                      <span>Theater: {theater ? theater.name : 'N/A'}</span>
                     </div>
-                    <div className="flex items-center mt-1">
+                    <div className="flex items-center">
                       <MapPin className="w-4 h-4 mr-2 text-green-400" />
-                      <span className="text-sm">Location : {theater ? theater.city : 'N/A'}</span>
+                      <span>Location: {theater ? theater.city : 'N/A'}</span>
                     </div>
-                    <div className="flex items-center mt-1">
+                    <div className="flex items-center">
                       <Calendar className="w-4 h-4 mr-2 text-blue-400" />
-                      <span>{showTime ? formatDate(showTime.date) : 'N/A'}</span>
+                      <span>Date: {showTime ? formatDate(showTime.date) : 'N/A'}</span>
                     </div>
-                    <div className="flex items-center mt-1">
+                    <div className="flex items-center">
                       <Clock className="w-4 h-4 mr-2 text-purple-400" />
-                      <span>{showTime ? showTime.time : 'N/A'}</span>
+                      <span>Time: {showTime ? showTime.time : 'N/A'}</span>
                     </div>
-                    <div className="flex items-center mt-1">
+                    <div className="flex items-center">
                       <Popcorn className="w-4 h-4 mr-2 text-yellow-500" />
-                      <span>{getAddOnNames(ticket.addOn)}</span>
+                      <span>Add-Ons: {getAddOnNames(ticket.addOn)}</span>
                     </div>
-                    <div className="flex items-center mt-1">
+                    <div className="flex items-center">
                       <Users className="w-4 h-4 mr-2 text-yellow-700" />
                       <span>Seats: {ticket.seatNumber}</span>
                     </div>
-                    <div className="flex items-center mt-1">
+                    <div className="flex items-center">
                       <DollarSign className="w-4 h-4 mr-2 text-green-600" />
                       <span>Total: ${ticket.cost}</span>
                     </div>
