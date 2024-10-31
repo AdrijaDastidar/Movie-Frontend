@@ -2,28 +2,27 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Calendar, Clock, Users, Ticket, DollarSign, PieChart, Popcorn } from "lucide-react";
+import { Calendar, Clock, Users, Ticket, DollarSign, PieChart, Popcorn, Building, MapPin } from "lucide-react";
 import { fetchBookings } from '../../../redux/bookingSlice';
 import { fetchShowTimes } from '@/redux/showTimeSlice';
+import { fetchTheaters } from '@/redux/theaterSlice';
+import { fetchMovies } from '@/redux/movieSlice';
 
 export default function Bookings() {
   const dispatch = useDispatch();
   const bookings = useSelector((state) => state.bookings.bookings);
   const showTimes = useSelector((state) => state.showtimes.showtimes);
+  const movies = useSelector((state) => state.movies.movies);
+  const theaters = useSelector((state) => state.theaters.theaters); // Make sure you have theaters in the state
   const loading = useSelector((state) => state.showtimes.loading);
   const error = useSelector((state) => state.showtimes.error);
 
   useEffect(() => {
     dispatch(fetchBookings());
-  }, [dispatch]);
-
-  useEffect(() => {
     dispatch(fetchShowTimes());
+    dispatch(fetchTheaters());
+    dispatch(fetchMovies());
   }, [dispatch]);
-  
-  useEffect(() => {
-    console.log("Fetched Show Times:", showTimes);
-  }, [showTimes]);
 
   const addOnMapping = {
     1: 'Popcorn',
@@ -35,12 +34,12 @@ export default function Bookings() {
   const getAddOnNames = (addOnArray) => {
     return addOnArray
       .map(id => addOnMapping[id] || 'No Add-On')
-      .join(', '); 
+      .join(', ');
   };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const options = { day: 'numeric',  month: 'numeric', year: '2-digit' };
+    const options = { day: 'numeric', month: 'numeric', year: '2-digit' };
     return date.toLocaleDateString('en-US', options);
   };
 
@@ -61,13 +60,24 @@ export default function Bookings() {
           ) : (
             bookings.map((ticket) => {
               const showTime = showTimes.find(st => st._id === ticket.showTimeId);
+              const movie = movies.find(m => m._id === (showTime ? showTime.movieId : null));
+              const theater = theaters.find(t => t._id === (showTime ? showTime.theaterId : null));
+
               return (
                 <div key={ticket._id} className="mb-4 p-4 border rounded-lg">
                   <div className="flex justify-between items-center mb-2">
-                    <h4 className="text-lg font-semibold">{ticket.movie}</h4>
+                    <h4 className="text-lg font-semibold">{movie ? movie.title : 'N/A'}</h4>
                     <Ticket className="w-5 h-5 text-primary" />
                   </div>
                   <div className="text-sm text-gray-300">
+                    <div className="flex items-center mt-1">
+                      <Building className="w-4 h-4 mr-2 text-gray-400" />
+                      <span className="text-sm">Theater : {theater ? theater.name : 'N/A'}</span>
+                    </div>
+                    <div className="flex items-center mt-1">
+                      <MapPin className="w-4 h-4 mr-2 text-green-400" />
+                      <span className="text-sm">Location : {theater ? theater.city : 'N/A'}</span>
+                    </div>
                     <div className="flex items-center mt-1">
                       <Calendar className="w-4 h-4 mr-2 text-blue-400" />
                       <span>{showTime ? formatDate(showTime.date) : 'N/A'}</span>
