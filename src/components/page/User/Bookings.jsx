@@ -1,55 +1,98 @@
-import React from 'react'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import {
-  Calendar,
-  Clock,
-  Users,
-  Ticket,
-  DollarSign,
-  PieChart,
-  Popcorn,
-} from "lucide-react"
-const bookedTickets = [
-    { id: 1, movie: "Inception", date: "2023-06-15", time: "19:30", seats: ["A1", "A2"], total: 25.98 },
-    { id: 2, movie: "The Dark Knight", date: "2023-06-18", time: "20:00", seats: ["B3", "B4", "B5"], total: 41.97 },
-  ];
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Calendar, Clock, Users, Ticket, DollarSign, PieChart, Popcorn } from "lucide-react";
+import { fetchBookings } from '../../../redux/bookingSlice';
+import { fetchShowTimes } from '@/redux/showTimeSlice';
 
 export default function Bookings() {
+  const dispatch = useDispatch();
+  const bookings = useSelector((state) => state.bookings.bookings);
+  const showTimes = useSelector((state) => state.showtimes.showtimes);
+  const loading = useSelector((state) => state.showtimes.loading);
+  const error = useSelector((state) => state.showtimes.error);
+
+  useEffect(() => {
+    dispatch(fetchBookings());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchShowTimes());
+  }, [dispatch]);
+  
+  useEffect(() => {
+    console.log("Fetched Show Times:", showTimes);
+  }, [showTimes]);
+
+  const addOnMapping = {
+    1: 'Popcorn',
+    2: 'Nachos',
+    3: 'Nuggets',
+    4: 'Soft Drink'
+  };
+
+  const getAddOnNames = (addOnArray) => {
+    return addOnArray
+      .map(id => addOnMapping[id] || 'No Add-On')
+      .join(', '); 
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { day: 'numeric',  month: 'numeric', year: '2-digit' };
+    return date.toLocaleDateString('en-US', options);
+  };
+
   return (
-    <Card className>
+    <Card>
       <CardHeader>
         <CardTitle>Your Booked Tickets</CardTitle>
         <CardDescription>Manage your upcoming movie experiences</CardDescription>
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-[400px]">
-          {bookedTickets.map((ticket) => (
-            <div key={ticket.id} className="mb-4 p-4 border rounded-lg">
-              <div className="flex justify-between items-center mb-2">
-                <h4 className="text-lg font-semibold">{ticket.movie}</h4>
-                <Ticket className="w-5 h-5 text-primary" />
-              </div>
-              <div className="text-sm text-gray-300">
-                <div className="flex items-center mt-1">
-                  <Calendar className="w-4 h-4 mr-2 text-blue-400" />
-                  <span>{ticket.date}</span>
+          {loading ? (
+            <div className="text-center">Loading...</div>
+          ) : error ? (
+            <div className="text-center text-red-500">{error}</div>
+          ) : bookings.length === 0 ? (
+            <div className="text-center">No bookings found.</div>
+          ) : (
+            bookings.map((ticket) => {
+              const showTime = showTimes.find(st => st._id === ticket.showTimeId);
+              return (
+                <div key={ticket._id} className="mb-4 p-4 border rounded-lg">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="text-lg font-semibold">{ticket.movie}</h4>
+                    <Ticket className="w-5 h-5 text-primary" />
+                  </div>
+                  <div className="text-sm text-gray-300">
+                    <div className="flex items-center mt-1">
+                      <Calendar className="w-4 h-4 mr-2 text-blue-400" />
+                      <span>{showTime ? formatDate(showTime.date) : 'N/A'}</span>
+                    </div>
+                    <div className="flex items-center mt-1">
+                      <Clock className="w-4 h-4 mr-2 text-purple-400" />
+                      <span>{showTime ? showTime.time : 'N/A'}</span>
+                    </div>
+                    <div className="flex items-center mt-1">
+                      <Popcorn className="w-4 h-4 mr-2 text-yellow-500" />
+                      <span>{getAddOnNames(ticket.addOn)}</span>
+                    </div>
+                    <div className="flex items-center mt-1">
+                      <Users className="w-4 h-4 mr-2 text-yellow-700" />
+                      <span>Seats: {ticket.seatNumber}</span>
+                    </div>
+                    <div className="flex items-center mt-1">
+                      <DollarSign className="w-4 h-4 mr-2 text-green-600" />
+                      <span>Total: ${ticket.cost}</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-center mt-1 ">
-                  <Clock className="w-4 h-4 mr-2 text-purple-400" />
-                  <span>{ticket.time}</span>
-                </div>
-                <div className="flex items-center mt-1">
-                  <Users className="w-4 h-4 mr-2 text-yellow-700" />
-                  <span>Seats: {ticket.seats.join(", ")}</span>
-                </div>
-                <div className="flex items-center mt-1">
-                  <DollarSign className="w-4 h-4 mr-2 text-green-600" />
-                  <span>Total: ${ticket.total}</span>
-                </div>
-              </div>
-            </div>
-          ))}
+              );
+            })
+          )}
         </ScrollArea>
       </CardContent>
       <CardFooter>
@@ -79,5 +122,5 @@ export default function Bookings() {
         </Card>
       </CardFooter>
     </Card>
-  )
+  );
 }

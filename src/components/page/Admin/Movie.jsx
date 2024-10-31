@@ -9,7 +9,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { Film, PlusCircle, Clock, Tag, Star, Calendar, ImageIcon, ArrowUpDown, MoreHorizontal, Edit, Trash2 } from "lucide-react";
+import { Film, PlusCircle, Clock, Tag, Star, Calendar, ImageIcon, Edit, Trash2 } from "lucide-react";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchMovies, addMovie, updateMovie, deleteMovie } from '../../../redux/movieSlice';
 

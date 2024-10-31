@@ -1,8 +1,9 @@
+// showTimeSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const BASE_URL = 'http://localhost:1000/showTime';
-const ADMIN_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MWNlNWRmMGE3YjM0YTMzZTA2Y2QwMSIsImlhdCI6MTczMDA1MTkwMywiZXhwIjoxNzMwMDYyNzAzfQ.VBKEkJhaHTlZoRXEhDyzoxwkdxGeW7cBXzrnnIND0tI';
+const ADMIN_TOKEN = 'your_admin_token_here';
 
 // Initial state
 const initialState = {
@@ -19,6 +20,16 @@ export const fetchShowTimes = createAsyncThunk('showTime/fetchShowTimes', async 
 
 export const addShowTime = createAsyncThunk('showTime/addShowTime', async (showTime) => {
     const response = await axios.post(`${BASE_URL}/create`, showTime, {
+        headers: { 
+            'Content-Type': 'application/json',
+            Authorization: `${ADMIN_TOKEN}`,
+        },
+    });
+    return response.data;
+});
+
+export const findShowTime = createAsyncThunk('showTime/findShowTime', async (id) => { 
+    const response = await axios.get(`${BASE_URL}/${id}`, {
         headers: { 
             'Content-Type': 'application/json',
             Authorization: `${ADMIN_TOKEN}`,
@@ -75,7 +86,14 @@ const showTimeSlice = createSlice({
             })
             .addCase(deleteShowTime.fulfilled, (state, action) => {
                 state.showtimes = state.showtimes.filter(showTime => showTime._id !== action.payload);
+            })
+            .addCase(findShowTime.fulfilled, (state, action) => {
+                const existingShowtime = state.showtimes.find(showTime => showTime._id === action.payload._id);
+                if (!existingShowtime) {
+                    state.showtimes.push(action.payload);
+                }
             });
+            
     },
 });
 

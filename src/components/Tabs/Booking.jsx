@@ -2,7 +2,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch} from 'react-redux';
 import { createBooking, fetchMovieById } from '../../redux/bookingSlice.js';
 import { fetchShowTimes } from '../../redux/showTimeSlice.js';
 import { fetchTheaters } from '../../redux/theaterSlice.js';
@@ -86,10 +86,7 @@ export default function Booking() {
     const showTimeId = filteredShowtimes.find(showtime => showtime.time === selectedShowtime)?._id;
     const seatNumbers = Array.from(selectedSeats);
     const addOnIds = cart.map(item => item.id).filter(Boolean);
-    console.log("Selected Seats:", Array.from(selectedSeats)); 
-    console.log(showTimeId);
-    console.log(addOnIds);
-    console.log("Cost:", amount);
+  
     try {
         await Promise.all(seatNumbers.map(seatNumber => 
             dispatch(createBooking({ showTimeId, seatNumber, addOn: addOnIds, cost: amount }))
