@@ -1,7 +1,7 @@
 import React from 'react'
 "use client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Film, BarChart3, PieChart, Users, DollarSign, Ticket, } from "lucide-react"
+import { Film, BarChart3, PieChart, Users, IndianRupeeIcon, Ticket, } from "lucide-react"
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, PieChart as RePieChart, Pie, Cell } from 'recharts';
 
 
@@ -10,10 +10,12 @@ export default function Overview() {
 
     // Example static array for movies
     const movies = [
-        { title: 'Movie 1', popularity: 75 },
+        { title: 'Movie 1', popularity: 55 },
         { title: 'Movie 2', popularity: 60 },
-        { title: 'Movie 3', popularity: 85 },
-        { title: 'Movie 4', popularity: 90 }
+        { title: 'Movie 3', popularity: 15 },
+        { title: 'Movie 4', popularity: 45 },
+        { title: 'Movie 5', popularity: 75 },
+        { title: 'Movie 6', popularity: 20 }
     ];
 
     const moviePopularity = movies.map(movie => ({
@@ -38,10 +40,10 @@ export default function Overview() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-                        <DollarSign className="h-4 w-4 text-muted-foreground" />
+                        <IndianRupeeIcon className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">$45,231.89</div>
+                        <div className="text-2xl font-bold">₹45,000</div>
                         <p className="text-xs text-muted-foreground">+20.1% from last month</p>
                     </CardContent>
                 </Card>
@@ -85,7 +87,7 @@ export default function Overview() {
                         <ResponsiveContainer width="100%" height={300}>
                             <BarChart data={weeklyRevenue}>
                                 <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                                <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
+                                <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `₹${value}`} />
                                 <Tooltip />
                                 <Bar dataKey="revenue" fill="#adfa1d" radius={[4, 4, 0, 0]} />
                             </BarChart>
@@ -107,7 +109,7 @@ export default function Overview() {
                                     outerRadius={80}
                                     fill="#8884d8"
                                     dataKey="value"
-                                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                                    label={({ name }) => `${name}`}
                                 >
                                     {moviePopularity.map((entry, index) => (
                                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

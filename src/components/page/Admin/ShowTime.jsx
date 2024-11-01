@@ -77,8 +77,10 @@ export default function ShowTime() {
     };
 
     const handleDeleteShowtime = (showtimeId) => {
-        dispatch(deleteShowTime(showtimeId));
-        dispatch(fetchShowTimes());
+        if(confirm("Are you sure you want to delete?")){
+            dispatch(deleteShowTime(showtimeId));
+        }
+    dispatch(fetchShowTimes());
     };
 
     const resetForm = () => {

@@ -2,8 +2,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const USER_TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MWNlNWRmMGE3YjM0YTMzZTA2Y2QwMSIsImlhdCI6MTczMDQ1NjQwMiwiZXhwIjoxODYwMDU2NDAyfQ.1awXZeCqMMEQrc4gmEBdWI6R4zkuecPmcR1NZPL52pY";
+const USER_TOKEN = localStorage.getItem('token');
+
 
 // Async thunk for creating a booking
 export const createBooking = createAsyncThunk(
@@ -46,6 +46,7 @@ export const fetchMovieById = createAsyncThunk(
 
 // Fetch all booking
 export const fetchBookings = createAsyncThunk("movies/fetchBookings", async () => {
+  console.log(USER_TOKEN);
   const response = await axios.get("http://localhost:1000/booking/all/user", {
     headers: {
       "Content-Type": "application/json",

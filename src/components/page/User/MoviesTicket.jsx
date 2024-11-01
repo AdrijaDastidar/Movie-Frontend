@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Clock, Star, DollarSign, TrendingUp, BarChart } from "lucide-react";
-import p1 from "../../../assets/img/p1.jpg"; 
 import { fetchMovies } from "../../../redux/movieSlice"; 
 import { setSelectedMovieId } from "../../../redux/bookingSlice";
 import { useNavigate } from 'react-router-dom';
@@ -38,7 +37,7 @@ export default function MoviesTicket() {
           {movies.map((movie) => (
             <div key={movie._id} className="flex items-center mb-4 p-2 hover:bg-gray-800 rounded-lg">
               <img
-                src={movie.image || p1} 
+                src={movie.posterUrl} 
                 alt={movie.title}
                 width={80}
                 height={120}

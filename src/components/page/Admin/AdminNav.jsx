@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react"
-import { Search, Bell, ChevronDown } from "lucide-react"
+import { Search, Bell, ChevronDown, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -11,13 +11,12 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 export default function AdminNav() {
-  // State to track the currently selected navigation item
   const [activeTab, setActiveTab] = useState("Dashboard")
 
   const navItems = [
     { name: "Dashboard", href: "/admin" },
-    { name: "Users", href: "/admin/users" },
-    { name: "Settings", href: "/admin/settings" },
+    { name: "Users", href: "/admin" },
+    { name: "Settings", href: "/admin" },
   ]
 
   return (
@@ -69,11 +68,7 @@ export default function AdminNav() {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="sm" className="ml-3 flex items-center">
-                      <img
-                        className="h-8 w-8 rounded-full"
-                        src="/placeholder.svg?height=32&width=32"
-                        alt="User profile"
-                      />
+                      <User className="h-5 w-5" aria-hidden="true" />
                       <ChevronDown className="ml-1 h-4 w-4" aria-hidden="true" />
                     </Button>
                   </DropdownMenuTrigger>
