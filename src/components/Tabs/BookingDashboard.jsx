@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MoviesTicket from "../page/User/MoviesTicket";
 import Bookings from "../page/User/Bookings";
 import Setting from "../page/User/Setting";
@@ -8,8 +8,25 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Film, Calendar, Settings, LogOut, Search } from "lucide-react";
 import p1 from "../../assets/img/x1.jpg";
+import {  useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../redux/settingSlice.js";
 export default function BookingDashboard() {
   const [activeTab, setActiveTab] = useState("movies");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.settings.token);
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
+  }, [token, navigate]);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
 
   return (
     <div className="flex w-lvw">
@@ -22,8 +39,8 @@ export default function BookingDashboard() {
           <a
             href="#"
             className={`w-full flex items-center px-4 py-2 rounded-lg transition-all duration-200 ${activeTab === "movies"
-                ? "text-white bg-gray-700"
-                : "text-gray-400 hover:bg-gray-700 hover:text-white"
+              ? "text-white bg-gray-700"
+              : "text-gray-400 hover:bg-gray-700 hover:text-white"
               }`}
             onClick={() => setActiveTab("movies")}
           >
@@ -33,8 +50,8 @@ export default function BookingDashboard() {
           <a
             href="#"
             className={`flex w-full items-center px-4 py-2 mt-1 rounded-lg transition-all duration-200 ${activeTab === "bookings"
-                ? "text-white bg-gray-700"
-                : "text-gray-400 hover:bg-gray-700 hover:text-white"
+              ? "text-white bg-gray-700"
+              : "text-gray-400 hover:bg-gray-700 hover:text-white"
               }`}
             onClick={() => setActiveTab("bookings")}
           >
@@ -44,8 +61,8 @@ export default function BookingDashboard() {
           <a
             href="#"
             className={`flex w-full items-center px-4 py-2 mt-1 rounded-lg transition-all duration-200 ${activeTab === "settings"
-                ? "text-white bg-gray-700"
-                : "text-gray-400 hover:bg-gray-700 hover:text-white"
+              ? "text-white bg-gray-700"
+              : "text-gray-400 hover:bg-gray-700 hover:text-white"
               }`}
             onClick={() => setActiveTab("settings")}
           >
@@ -54,7 +71,11 @@ export default function BookingDashboard() {
           </a>
         </nav>
         <div className="absolute bottom-0 w-64 p-4">
-          <Button variant="outline" className="w-full text-white border-gray-700 hover:bg-gray-700 hover:text-white">
+          <Button
+            variant="outline"
+            className="w-full text-white border-gray-700 hover:bg-gray-700 hover:text-white"
+            onClick={handleLogout} 
+          >
             <LogOut className="w-4 h-4 mr-2" /> Logout
           </Button>
         </div>
@@ -88,18 +109,18 @@ export default function BookingDashboard() {
             />
           </CardContent>
         </Card>
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsContent value="movies">
-              <MoviesTicket />
-            </TabsContent>
-            <TabsContent value="bookings">
-              <Bookings />
-            </TabsContent>
-            <TabsContent value="settings">
-              <Setting />
-            </TabsContent>
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsContent value="movies">
+            <MoviesTicket />
+          </TabsContent>
+          <TabsContent value="bookings">
+            <Bookings />
+          </TabsContent>
+          <TabsContent value="settings">
+            <Setting />
+          </TabsContent>
         </Tabs>
-    </main>
+      </main>
     </div >
   );
 }

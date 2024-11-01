@@ -1,46 +1,30 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { login } from '../../redux/settingSlice'; 
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  
   const handleSignIn = async (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch("http://localhost:1000/user/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const json = await response.json();
-      console.log(json);
-
-       if (json.token) {
-        localStorage.setItem('token', json.token);
-        navigate('/user');
-      } else {
-        alert(json.message || 'Login failed. Please try again.');
-      }
-    } catch (error) {
-      console.error('There was a problem with the login request:', error);
-      alert('An error occurred. Please try again later.');
+    const resultAction = await dispatch(login({ email, password }));
+    
+    if (login.fulfilled.match(resultAction)) {
+      navigate('/user');
+    } else {
+      alert(resultAction.payload || 'Login failed');
     }
   };
 
   return (
-    <div
-      className="w-screen h-screen flex justify-center items-center bg-cover bg-center"
+    <div className="w-screen h-screen flex justify-center items-center bg-cover bg-center"
       style={{ backgroundImage: 'url(https://img.freepik.com/premium-photo/poster-with-many-movies-including-one-which-has-title-movie-it_1297762-417.jpg?w=1060)' }}
     >
-      <div className="bg-black bg-opacity-75 rounded-lg shadow-lg p-8 w-96shadow-lg border-2 border-black hover:shadow-[0px_8px_50px_black]">
+      <div className="bg-black bg-opacity-75 rounded-lg shadow-lg p-8 w-96 border-2 border-black hover:shadow-[0px_8px_50px_black]">
         <h1 className="text-4xl font-semibold text-white mb-6">Sign In</h1>
         <div className="mb-4">
           <input
@@ -70,7 +54,6 @@ const LoginPage = () => {
           <span
             className="text-blue-400 cursor-pointer hover:underline"
             onClick={() => {
-              // Add forgot password logic here
               console.log('Redirect to forgot password');
             }}
           >
@@ -80,8 +63,7 @@ const LoginPage = () => {
         <button
           className="w-full py-2 bg-red-600 text-white rounded hover:bg-red-700 hover:shadow-lg transition duration-300"
           onClick={handleSignIn}
-        >
-          Login
+        > Login
         </button>
         <div className="mt-4 text-center">
           <span className="text-white">Not a member ? </span>

@@ -1,29 +1,31 @@
-// bookingSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
-const USER_TOKEN = localStorage.getItem('token');
-
 
 // Async thunk for creating a booking
 export const createBooking = createAsyncThunk(
   "booking/createBooking",
-  async ({ showTimeId, seatNumber, addOn, cost }) => {
-    const response = await axios.post(
-      "http://localhost:1000/booking/create",{
-        showTimeId,
-        seatNumber,
-        addOn,
-        cost,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${USER_TOKEN}`,
+  async ({ showTimeId, seatNumber, addOn, cost }, { getState, rejectWithValue }) => {
+    try {
+      const { token } = getState().settings;
+      const response = await axios.post(
+        "http://localhost:1000/booking/create",
+        {
+          showTimeId,
+          seatNumber,
+          addOn,
+          cost,
         },
-      }
-    );
-    return response.data;
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${token}`, // Use the token here
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Booking creation failed.");
+    }
   }
 );
 
@@ -32,29 +34,34 @@ export const fetchMovieById = createAsyncThunk(
   "movie/fetchMovieById",
   async (movieId, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `http://localhost:1000/movie/${movieId}`
-      );
+      const response = await axios.get(`http://localhost:1000/movie/${movieId}`);
       return response.data;
     } catch (error) {
-      return rejectWithValue(
-        error.response?.data || { message: "Movie not found." }
-      );
+      return rejectWithValue(error.response?.data || { message: "Movie not found." });
     }
   }
 );
 
-// Fetch all booking
-export const fetchBookings = createAsyncThunk("movies/fetchBookings", async () => {
-  console.log(USER_TOKEN);
-  const response = await axios.get("http://localhost:1000/booking/all/user", {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `${USER_TOKEN}`,
-    },
-  });
-  return response.data;
-});
+// Async thunk for fetching all bookings
+export const fetchBookings = createAsyncThunk(
+  "booking/fetchBookings",
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      // Retrieve the token from the settings slice in state
+      const { token } = getState().settings;
+
+      const response = await axios.get("http://localhost:1000/booking/all/user", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`, // Use the token here
+        },
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || { message: "Failed to fetch bookings." });
+    }
+  }
+);
 
 // Create booking slice
 const bookingSlice = createSlice({
@@ -69,7 +76,7 @@ const bookingSlice = createSlice({
   reducers: {
     setSelectedMovieId: (state, action) => {
       state.selectedMovieId = action.payload;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -93,15 +100,16 @@ const bookingSlice = createSlice({
       })
       .addCase(fetchBookings.fulfilled, (state, action) => {
         state.bookings = action.payload.bookings || [];
+        state.loading = false;
         state.error = null;
       })
       .addCase(fetchBookings.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.payload;
       });
   },
 });
 
 // Export actions and reducer
-export const { setSelectedMovieId, clearSelectedMovieId } =
-  bookingSlice.actions;
+export const { setSelectedMovieId } = bookingSlice.actions;
 export default bookingSlice.reducer;
