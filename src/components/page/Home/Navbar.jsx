@@ -33,7 +33,7 @@ const Navbar = () => {
                 <li><Link to="/movies">Movies</Link></li>
                 <li><Link to="/top-movies">Top Movies</Link></li>
                 <li><Link to="/blog">News</Link></li>
-                <li><Link className="theme-btn" to="/tickets"><i className="icofont icofont-ticket"></i> Tickets</Link></li>
+                <li><Link className="theme-btn" to="/user"><i className="icofont icofont-ticket"></i> Tickets</Link></li>
               </ul>
             </div>
           </div>

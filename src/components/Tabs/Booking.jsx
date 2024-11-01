@@ -2,20 +2,20 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
-import { useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createBooking, fetchMovieById } from '../../redux/bookingSlice.js';
 import { fetchShowTimes } from '../../redux/showTimeSlice.js';
 import { fetchTheaters } from '../../redux/theaterSlice.js';
-import poster from '../../assets/img/p1.jpg';
 import a1 from '../../assets/img/a1.jpg';
 import a2 from '../../assets/img/a2.jpg';
 import a3 from '../../assets/img/a3.jpg';
 import a4 from '../../assets/img/a4.jpg';
+import Navbar from "../page/Home/Navbar.jsx";
 
 export default function Booking() {
   const dispatch = useDispatch();
   const [cart, setCart] = useState([]);
-  const bookingsId = useSelector((state) => state.bookings.selectedMovieId);  
+  const bookingsId = useSelector((state) => state.bookings.selectedMovieId);
   const [selectedLocation, setSelectedLocation] = useState("");
   const [selectedTheater, setSelectedTheater] = useState("");
   const [selectedShowtime, setSelectedShowtime] = useState("");
@@ -25,9 +25,7 @@ export default function Booking() {
   const [filteredShowtimes, setFilteredShowtimes] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState(new Set());
   const [movieDetails, setMovieDetails] = useState(null);
-
-  // const movieId = "6720ec7cf84f3c58057b2bfa";
-
+  const Poster = movieDetails?.posterUrl;
   useEffect(() => {
     const fetchDetails = async () => {
       try {
@@ -45,7 +43,7 @@ export default function Booking() {
         const filteredShowtimes = showtimesResponse.payload.filter(showTime => showTime.movieId === bookingsId);
         setTheaters(theatersResponse.payload);
         setShowTimes(showtimesResponse.payload);
-        setFilteredShowtimes(filteredShowtimes);
+        setFilteredShowtimes(filteredShowtimes)
 
       } catch (error) {
         console.error("Failed to fetch theaters or showtimes:", error);
@@ -68,7 +66,8 @@ export default function Booking() {
   useEffect(() => {
     if (selectedTheater) {
       const showtimesForTheater = showTimes.filter(
-        showtime => showtime.theaterId === filteredTheaters.find(theater => theater.name === selectedTheater)?._id
+        showtime => showtime.theaterId === filteredTheaters.find(theater => theater.name === selectedTheater)?._id &&
+          showtime.movieId === bookingsId
       );
       setFilteredShowtimes(showtimesForTheater);
     } else {
@@ -80,26 +79,27 @@ export default function Booking() {
 
   const handleBooking = async (amount) => {
     if (!selectedShowtime || selectedSeats.size === 0) {
-        alert("Please select a showtime and seats before booking.");
-        return;
+      alert("Please select a showtime and seats before booking.");
+      return;
     }
 
     const showTimeId = filteredShowtimes.find(showtime => showtime.time === selectedShowtime)?._id;
     const seatNumbers = Array.from(selectedSeats);
     const addOnIds = cart.map(item => item.id).filter(Boolean);
-  
-    try {
-        await Promise.all(seatNumbers.map(seatNumber => 
-            dispatch(createBooking({ showTimeId, seatNumber, addOn: addOnIds, cost: amount }))
-        ));
 
-        alert("Booking successful!");
-        setSelectedSeats(new Set());
+    try {
+      await Promise.all(seatNumbers.map(seatNumber =>
+        dispatch(createBooking({ showTimeId, seatNumber, addOn: addOnIds, cost: amount }))
+      ));
+
+      alert("Booking successful!");
+      checkOutHandler(amount);
+      setSelectedSeats(new Set());
     } catch (error) {
-        console.error("Booking failed:", error);
-        alert("Booking failed. Please try again.");
+      console.error("Booking failed:", error);
+      alert("Booking failed. Please try again.");
     }
-};
+  };
 
 
   const seatPrices = {
@@ -168,8 +168,8 @@ export default function Booking() {
     });
   };
   useEffect(() => {
-    console.log("Selected Seats:", Array.from(selectedSeats)); 
-  }, [selectedSeats]); 
+    console.log("Selected Seats:", Array.from(selectedSeats));
+  }, [selectedSeats]);
 
 
   const handleAddToCart = () => {
@@ -185,18 +185,20 @@ export default function Booking() {
 
   return (
     <div className="flex flex-col min-h-screen bg-muted mx-20 my-36">
+      <Navbar />
       <main className="flex-1 container mx-auto py-8 px-4 sm:px-6">
         <section className="grid md:grid-cols-2 gap-8">
           <div className="grid gap-4">
             <div className="bg-background rounded-lg shadow-sm overflow-hidden">
               <img
-                src={poster}
+                src={Poster}
                 alt="Movie Poster"
                 width={600}
                 height={900}
                 className="w-full h-auto object-cover"
                 style={{ aspectRatio: "600/900", objectFit: "cover" }}
               />
+
             </div>
             <div className="grid gap-2">
               <h1 className="text-2xl font-bold">{movieDetails?.title || "Movie Title"}</h1>
@@ -259,19 +261,25 @@ export default function Booking() {
                   {selectedTheater && (
                     <div>
                       <label className="font-medium">Available Showtimes</label>
-                      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-2">
-                        {filteredShowtimes.map(showtime => (
-                          <div
-                            key={showtime.time}
-                            className={`aspect-square w-32 h-10 rounded-md flex items-center justify-center cursor-pointer transition-colors 
-                      ${selectedShowtime === showtime.time ? 'bg-green-400 text-white' : 'bg-violet-200 text-black'}
-                       hover:bg-green-300`}
-                            onClick={() => setSelectedShowtime(showtime.time)}
-                          >
-                            {showtime.time}
-                          </div>
-                        ))}
-                      </div>
+                      {filteredShowtimes.length > 0 ? (
+                        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-2">
+                          {filteredShowtimes.map(showtime => (
+                            <div
+                              key={showtime.time}
+                              className={`aspect-square w-32 h-10 rounded-md flex items-center justify-center cursor-pointer transition-colors 
+                          ${selectedShowtime === showtime.time ? 'bg-green-400 text-white' : 'bg-violet-200 text-black'}
+                           hover:bg-green-300`}
+                              onClick={() => setSelectedShowtime(showtime.time)}
+                            >
+                              {showtime.time}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-red-500 font-medium mt-2">
+                          No showtimes available
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -328,10 +336,10 @@ export default function Booking() {
             </CardHeader>
             <CardContent>
               <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {[{ id : 1, name: "Popcorn", price: 299, img: a1 },
-                { id : 2, name: "Nachos", price: 249, img: a2 },
-                { id : 3, name: "Nuggets", price: 199, img: a3 },
-                { id : 4, name: "Soft Drink", price: 79, img: a4 }]
+                {[{ id: 1, name: "Popcorn", price: 299, img: a1 },
+                { id: 2, name: "Nachos", price: 249, img: a2 },
+                { id: 3, name: "Nuggets", price: 199, img: a3 },
+                { id: 4, name: "Soft Drink", price: 79, img: a4 }]
                   .map(item => (
                     <div key={item.name} className="grid gap-2">
                       <div className="bg-background rounded-lg shadow-sm overflow-hidden">
@@ -375,7 +383,7 @@ export default function Booking() {
                   <span>Rs {totalCost}</span>
                 </div>
                 <div className="flex justify-end">
-                  <Button onClick={()=>handleBooking(totalCost)} size="lg" className="bg-blue-600 text-white">Proceed to Payment</Button>
+                  <Button onClick={() => handleBooking(totalCost)} size="lg" className="bg-blue-600 text-white">Proceed to Payment</Button>
                 </div>
               </div>
             </CardContent>

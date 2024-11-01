@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from '../page/tmdb/HomePage';
 import TitlePage from '../page/tmdb/TitlePage';
 import NotFoundPage from '../page/tmdb/NotFoundPage';
+import Navbar from '../page/Home/Navbar';
 
 const Movies = () => {
   const [darkMode, setDarkMode] = useState(
@@ -12,6 +13,7 @@ const Movies = () => {
 
   return (
     <div className={`App ${darkMode && "dark"}`}>
+      <Navbar />
         <div className="bg-light-800 w-screen dark:bg-dark-600 h-screen overflow-x-hidden">
           <Routes>
             <Route path="/" element={<HomePage />} />
