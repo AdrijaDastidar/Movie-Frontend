@@ -1,11 +1,12 @@
 import { useState } from "react"
 import { Tabs, TabsContent } from "@/components/ui/tabs"
-import { Film, Home, Theater, Compass } from "lucide-react"
+import { Film, Home, Theater, Compass, SettingsIcon } from "lucide-react"
 import Overview from "../page/Admin/Overview"
 import Movie from "../page/Admin/Movie"
 import ShowTime from "../page/Admin/ShowTime"
 import Auditorium from "../page/Admin/Auditorium"
 import AdminNav from "../page/Admin/AdminNav"
+import Setting from "../page/Admin/Settings"
 
 export default function Admin() {
     const [activeTab, setActiveTab] = useState("overview")
@@ -71,6 +72,20 @@ export default function Admin() {
                                     </span>
                                 </div>
                             </li>
+
+                            {/* Settings Tab */}
+                            <li>
+                                <div
+                                    onClick={() => setActiveTab("settings")}
+                                    className={`w-full flex items-center p-2 rounded hover:bg-gray-700 cursor-pointer transition duration-200 ease-in-out ${activeTab === "settings" ? "bg-gray-700" : ""
+                                        }`}
+                                >
+                                    <SettingsIcon className="mr-2 h-4 w-4 text-white" />
+                                    <span className={`${activeTab === "settings" ? "font-bold" : ""} text-white`}>
+                                        Settings
+                                    </span>
+                                </div>
+                            </li>
                         </ul>
                     </nav>
                 </aside>
@@ -97,6 +112,11 @@ export default function Admin() {
                         {/* Showtimes Tab */}
                         <TabsContent className="py-9" value="showtimes">
                             <ShowTime />
+                        </TabsContent>
+
+                        {/* Settings Tab */}
+                        <TabsContent className="py-9" value="settings">
+                            <Setting />
                         </TabsContent>
                     </Tabs>
                 </main>

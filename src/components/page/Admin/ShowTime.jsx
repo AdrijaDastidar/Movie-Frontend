@@ -89,6 +89,13 @@ export default function ShowTime() {
         setIsEdit(false);
         setEditingShowtimeId(null);
     };
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const options = { day: 'numeric', month: 'numeric', year: '2-digit' };
+        return date.toLocaleDateString('en-US', options);
+      };
+
     return (
         <>
             <h2 className="text-2xl font-bold mb-4">Manage Showtimes</h2>
@@ -172,7 +179,7 @@ export default function ShowTime() {
                             <TableCell>{showtime._id}</TableCell>
                             <TableCell>{movies.find((m) => m._id === showtime.movieId)?.title}</TableCell>
                             <TableCell>{theaters.find((t) => t._id === showtime.theaterId)?.name }</TableCell>
-                            <TableCell>{showtime.date}</TableCell>
+                            <TableCell>{formatDate(showtime.date)}</TableCell>
                             <TableCell>{showtime.time}</TableCell>
                             <TableCell>
                                 <div className="flex space-x-4">
