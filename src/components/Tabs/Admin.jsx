@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Tabs, TabsContent } from "@/components/ui/tabs"
-import { Film, Home, Theater, Compass, SettingsIcon } from "lucide-react"
+import { Film, Home, Theater, Compass, SettingsIcon, LogOut } from "lucide-react"
 import Overview from "../page/Admin/Overview"
 import Movie from "../page/Admin/Movie"
 import ShowTime from "../page/Admin/ShowTime"
@@ -9,7 +9,8 @@ import AdminNav from "../page/Admin/AdminNav"
 import Setting from "../page/Admin/Settings"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { adminLogout} from "../../redux/adminSettingSlice.js";
+import { adminLogout } from "../../redux/adminSettingSlice.js";
+import { Button } from "../ui/button"
 
 
 export default function Admin() {
@@ -31,7 +32,7 @@ export default function Admin() {
     return (
         <div className="flex">
             {/* Sidebar */}
-            <aside className="w-64 py-32 bg-gray-900 shadow-md">
+            <aside className="w-64 py-32 bg-gray-900 shadow-md h-screen sticky top-0">
                 <nav className="p-4">
                     <h2 className="text-xl font-bold mb-4 text-white">Admin Dashboard</h2>
                     <ul className="space-y-2">
@@ -105,6 +106,15 @@ export default function Admin() {
                             </div>
                         </li>
                     </ul>
+                    <div className="absolute right-5 w-60 p-4 my-10">
+                        <Button
+                            variant="outline"
+                            className="w-full flex items-center text-white border-gray-700 hover:bg-gray-700 hover:text-white"
+                            onClick={handleLogout}
+                        >
+                            <LogOut className="w-4 h-4 mr-2" /> Logout
+                        </Button>
+                    </div>
                 </nav>
             </aside>
 

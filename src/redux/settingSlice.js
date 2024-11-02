@@ -39,7 +39,7 @@ export const login = createAsyncThunk(
 
 // Initial state
 const initialState = {
-  token: null,
+  token: localStorage.getItem('userToken') || null,
   loading: false,
   error: null,
   successMessage: null,
@@ -56,6 +56,7 @@ const settingSlice = createSlice({
     },
     logout(state) {
       state.token = null; 
+      localStorage.removeItem('userToken'); 
     },
   },
   extraReducers: (builder) => {
@@ -63,6 +64,8 @@ const settingSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.token = action.payload.token;
+        localStorage.setItem('userToken', action.payload.token);
+
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -75,11 +78,11 @@ const settingSlice = createSlice({
       })
       .addCase(updatePassword.fulfilled, (state, action) => {
         state.loading = false;
-        state.successMessage = action.payload.message; // Assuming your API returns a message
+        state.successMessage = action.payload.message; 
       })
       .addCase(updatePassword.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload; // Assuming your API returns an error message
+        state.error = action.payload; 
       });
   },
 });

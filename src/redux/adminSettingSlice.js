@@ -41,7 +41,7 @@ export const adminLogin = createAsyncThunk(
 
 // Initial state for the admin slice
 const initialState = {
-  token: null,
+  token: localStorage.getItem('authToken') || null,
   loading: false,
   error: null,
   successMessage: null,
@@ -57,7 +57,8 @@ const adminSettingSlice = createSlice({
       state.successMessage = null;
     },
     adminLogout(state) {
-      state.token = null; 
+      state.token = null;
+      localStorage.removeItem('authToken'); 
     },
   },
   extraReducers: (builder) => {
@@ -82,6 +83,7 @@ const adminSettingSlice = createSlice({
       .addCase(adminLogin.fulfilled, (state, action) => {
         state.loading = false;
         state.token = action.payload.token; 
+        localStorage.setItem('authToken', action.payload.token);
       })
       .addCase(adminLogin.rejected, (state, action) => {
         state.loading = false;

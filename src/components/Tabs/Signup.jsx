@@ -6,18 +6,17 @@ const Signup = () => {
     name: '',
     email: '',
     password: '',
+    confirmPassword: '',
   });
-
+  const [isAdmin, setIsAdmin] = useState(false); // Toggle between User and Admin
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState('');
-
   const navigate = useNavigate();
 
   const validateForm = () => {
     const newErrors = {};
 
     if (!formData.name) newErrors.name = 'Required';
-
     if (!formData.email || !/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Invalid Email';
     }
@@ -26,7 +25,7 @@ const Signup = () => {
     if (!formData.password) {
       newErrors.password = 'Password is required';
     } else if (!passwordPattern.test(formData.password)) {
-      newErrors.password = 'Password must be at least 8 characters long and include letters, numbers, and special characters';
+      newErrors.password = 'Password must include letters, numbers, and special characters, and be at least 8 characters long';
     }
 
     if (formData.password !== formData.confirmPassword) {
@@ -41,7 +40,7 @@ const Signup = () => {
     event.preventDefault();
     if (validateForm()) {
       try {
-        const response = await fetch('http://localhost:1000/user/create', {
+        const response = await fetch(`http://localhost:1000/${isAdmin ? 'admin' : 'user'}/create`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -74,6 +73,23 @@ const Signup = () => {
     >
       <div className="bg-black bg-opacity-75 p-8 rounded-2xl w-96 shadow-lg border-2 border-black hover:shadow-[0px_8px_50px_black]">
         <h1 className="text-center text-white text-4xl mb-8">Sign up</h1>
+
+        {/* Tab Navigation */}
+        <div className="flex justify-around mb-4">
+          <div
+            className={`cursor-pointer text-white ${!isAdmin ? 'border-b-2 border-red-600 text-red-600' : 'text-gray-400'}`}
+            onClick={() => setIsAdmin(false)}
+          >
+            User Signup
+          </div>
+          <div
+            className={`cursor-pointer text-white ${isAdmin ? 'border-b-2 border-red-600' : 'text-gray-400'}`}
+            onClick={() => setIsAdmin(true)}
+          >
+            Admin Signup
+          </div>
+        </div>
+
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <input
