@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const BASE_URL = 'http://localhost:1000/movie';
-const ADMIN_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZmU3NDk2MTMxMzdmYmE5NzllODE3YiIsImlhdCI6MTczMDE0MzMyMiwiZXhwIjoxNzMxNDM5MzIyfQ.FD4B1TSuVUruUZbGrQZ8ZmyCx0P8KekiUR_ckX1_TFc';
 
 // Initial state
 const initialState = {
@@ -17,35 +16,39 @@ export const fetchMovies = createAsyncThunk('movies/fetchMovies', async () => {
     return response.data;
 });
   
-export const addMovie = createAsyncThunk('movies/addMovie', async (movie) => {
+export const addMovie = createAsyncThunk('movies/addMovie', async (movie, { getState }) => {
+    const { token } = getState().adminSettings; 
     const response = await axios.post(`${BASE_URL}/create`, movie, {
             headers: { 
                 'Content-Type': 'application/json',
-                Authorization: `${ADMIN_TOKEN}`
+                Authorization: `${token}`
             },
         });
     return response.data;
 });
 
-export const updateMovie = createAsyncThunk('movies/updateMovie', async ({ id, movie }) => {
+export const updateMovie = createAsyncThunk('movies/updateMovie', async ({ id, movie }, { getState }) => {
+    const { token } = getState().adminSettings; 
     const response = await axios.put(
         `${BASE_URL}/${id}`, 
         movie, 
         {
             headers: { 
                 'Content-Type': 'application/json',
+                Authorization: `${token}`
             },
         }
     );
     return response.data;
 });
 
-export const deleteMovie = createAsyncThunk('movies/deleteMovie', async (id) => {
+export const deleteMovie = createAsyncThunk('movies/deleteMovie', async (id, { getState }) => {
+    const { token } = getState().adminSettings;
     await axios.delete(
         `${BASE_URL}/${id}`, 
         {
             headers: { 
-                Authorization: `Bearer ${ADMIN_TOKEN}` 
+                Authorization: `${token}`
             },
         }
     );
@@ -82,7 +85,7 @@ const movieSlice = createSlice({
             })
             .addCase(deleteMovie.fulfilled, (state, action) => {
                 state.movies = state.movies.filter(movie => movie._id !== action.payload);
-            })
+            });
     },
 });
 

@@ -1,9 +1,7 @@
-// showTimeSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const BASE_URL = 'http://localhost:1000/showTime';
-const ADMIN_TOKEN = 'your_admin_token_here';
 
 // Initial state
 const initialState = {
@@ -18,39 +16,44 @@ export const fetchShowTimes = createAsyncThunk('showTime/fetchShowTimes', async 
     return response.data.showTime;
 });
 
-export const addShowTime = createAsyncThunk('showTime/addShowTime', async (showTime) => {
+export const addShowTime = createAsyncThunk('showTime/addShowTime', async (showTime, { getState }) => {
+    const { token } = getState().adminSettings; // Get token from state
     const response = await axios.post(`${BASE_URL}/create`, showTime, {
         headers: { 
             'Content-Type': 'application/json',
-            Authorization: `${ADMIN_TOKEN}`,
+            Authorization: `${token}`, // Include token
         },
     });
     return response.data;
 });
 
-export const findShowTime = createAsyncThunk('showTime/findShowTime', async (id) => { 
+export const findShowTime = createAsyncThunk('showTime/findShowTime', async (id, { getState }) => {
+    const { token } = getState().adminSettings; // Get token from state
     const response = await axios.get(`${BASE_URL}/${id}`, {
         headers: { 
             'Content-Type': 'application/json',
-            Authorization: `${ADMIN_TOKEN}`,
+            Authorization: `${token}`, // Include token
         },
     });
     return response.data;
 });
 
-export const updateShowTime = createAsyncThunk('showTime/updateShowTime', async ({ id, showTime }) => {
+export const updateShowTime = createAsyncThunk('showTime/updateShowTime', async ({ id, showTime }, { getState }) => {
+    const { token } = getState().adminSettings; // Get token from state
     const response = await axios.put(`${BASE_URL}/${id}`, showTime, {
         headers: { 
             'Content-Type': 'application/json',
+            Authorization: `${token}`, // Include token
         },
     });
     return response.data.showTime;
 });
 
-export const deleteShowTime = createAsyncThunk('showTime/deleteShowTime', async (id) => {
+export const deleteShowTime = createAsyncThunk('showTime/deleteShowTime', async (id, { getState }) => {
+    const { token } = getState().adminSettings; // Get token from state
     await axios.delete(`${BASE_URL}/${id}`, {
         headers: { 
-            Authorization: `${ADMIN_TOKEN}`,
+            Authorization: `${token}`, // Include token
         },
     });
     return id;
@@ -93,7 +96,6 @@ const showTimeSlice = createSlice({
                     state.showtimes.push(action.payload);
                 }
             });
-            
     },
 });
 

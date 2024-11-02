@@ -4,6 +4,7 @@ import movieReducer from './movieSlice';
 import theaterReducer from './theaterSlice';
 import settingReducer from './settingSlice'; 
 import bookingReducer from './bookingSlice'; 
+import adminSettingsReducer from './adminSettingSlice'; 
 
 const store = configureStore({
     reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
         showtimes: showTimeReducer,
         settings: settingReducer,
         bookings: bookingReducer, 
+        adminSettings : adminSettingsReducer,
     },
 });
 
