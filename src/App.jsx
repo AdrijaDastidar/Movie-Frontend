@@ -9,6 +9,7 @@ import BookingDashboard from './components/Tabs/BookingDashboard';
 import Payment from './components/Tabs/Payment';
 import LoginPage from './components/Tabs/login';
 import Signup from './components/Tabs/Signup';
+import TopMovies from './components/Tabs/TopMovies';
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="/paymentSuccess" element={<Payment />} /> 
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<Signup />} /> 
+          <Route path="/top-movies/*" element={<TopMovies />} /> 
         </Routes>
       </Router>
     </ThemeProvider>
