@@ -37,7 +37,7 @@ const movies = [
   4147, 50546, 1701, 13027, 2289, 20504, 9574, 11618, 2300, 12096, 10200, 8834, 228150, 6068, 41515, 9023, 38317
 ]
 
-const initialTitlesState = {
+const initialTitlesState = { 
   page: 0,
   data: [],
   totalPages: 0,
@@ -66,7 +66,6 @@ const titlesReducer = (state, { type, payload }) => {
   }
 }
 
-
 function Home() {
   const [searchQuery, setSearchQuery] = useState("")
   const [loading, setLoading] = useState(false)
@@ -75,45 +74,54 @@ function Home() {
 
   const filterMovies = (allMovies) => {
     return allMovies.filter(movie => movies.includes(movie.id))
-  }
+  }  
 
   useEffect(() => {
+    // Reset titles state when searchQuery changes
     dispatch({ type: 'SET_INITIAL' })
     fetchTitles(1, searchQuery)
   }, [searchQuery])
 
   const fetchTitles = async (page, searchTerm = "") => {
     setLoading(true)
-    const newTitles = await TMDB.getMoviesAndTV(page, searchQuery)
-
-    const filteredTitles = filterMovies(newTitles.results)
-
-    dispatch({
-      type: 'ADD_TITLES', payload: {
-        ...newTitles,
-        results: filteredTitles
-      }
-    })
-    setLoading(false)
+    try {
+      const newTitles = await TMDB.getMoviesAndTV(page, searchTerm)
+      
+      const filteredTitles = filterMovies(newTitles.results)
+  
+      dispatch({ 
+        type: 'ADD_TITLES', 
+        payload: { 
+          ...newTitles, 
+          results: filteredTitles 
+        } 
+      })
+    } catch (error) {
+      console.error("Error fetching titles:", error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handlePagination = () => {
-    fetchTitles(titles.page + 1)
+    if (titles.page < titles.totalPages) {
+      fetchTitles(titles.page + 1)
+    }
   }
 
   return (
     <>
-      {heroTitle &&
-        <Hero
-          image={heroTitle.backdrop_path}
-          title={heroTitle.title}
+      {heroTitle && 
+        <Hero 
+          image={heroTitle.backdrop_path} 
+          title={heroTitle.title} 
           description={heroTitle.overview}
-          link={`/title/${heroTitle.media_type}/${heroTitle.id}`}
+          link={`/title/${heroTitle.media_type}/${heroTitle.id}`} 
         />
       }
       <Search setSearch={setSearchQuery} />
-      {titles.data &&
-        <TitleList
+      {titles.data && 
+        <TitleList 
           loadMore={handlePagination}
           hasMore={titles.totalPages > titles.page}
           header={searchQuery ? "Search Results" : "Popular Today"}
@@ -122,7 +130,6 @@ function Home() {
       }
       {loading && <Loader />}
       {!(loading || titles.totalPages > titles.page) && <End />}
-
     </>
   )
 }
