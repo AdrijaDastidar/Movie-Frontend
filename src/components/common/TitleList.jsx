@@ -27,7 +27,7 @@ export default function TitleList({ header, titles, loadMore, hasMore }) {
           <div className="flex justify-center items-center w-8 h-8 absolute top-0 right-0 p-1 m-1 z-10 text-sm font-bold rounded-full bg-dark-800/70 text-white">
             {t.vote_average ? t.vote_average : "N/A"}
           </div>
-          <Link to={`/movies/title/${t.media_type}/${t.id}`}>
+          <Link to={`title/${t.media_type}/${t.id}`}>
             <Card
               id={t.id}
               title={t.title}

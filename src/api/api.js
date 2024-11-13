@@ -8,6 +8,23 @@ const API_BASE_URL = "https://api.themoviedb.org/3",
   // posterImgURL = "https://image.tmdb.org/t/p/original",
 
   TMDB = {
+    fetchMovieBackdrop: async (movieId) => {
+      const url = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${TMDB_API_KEY}&language=en-US`;
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+    
+        if (data.backdrop_path) {
+          return data.backdrop_path; 
+        } else {
+          console.error('No backdrop path found for this movie.');
+          return null;
+        }
+      } catch (error) {
+        console.error('Error fetching movie details:', error);
+        return null;
+      }
+    },    
     getMoviesAndTV: async (page, searchTerm = "") => {
       const resp = await fetch(
         searchTerm
@@ -72,36 +89,6 @@ const API_BASE_URL = "https://api.themoviedb.org/3",
         }));
       }
       return actors;
-    },
-    async getRecommendedMovies(title) {
-      const query = `
-		  MATCH (m:Movie {title: $title})-[:HAS_GENRE|HAS_CAST|HAS_DIRECTOR]->(f)
-		  WITH m, f
-		  MATCH (other:Movie)-[:HAS_GENRE|HAS_CAST|HAS_DIRECTOR]->(f)
-		  WHERE other <> m
-	
-		  WITH other,
-			   COUNT(CASE WHEN (f:Genre) THEN 1 END) AS genre_count,
-			   COUNT(CASE WHEN (f:Actor) THEN 1 END) AS actor_count,
-			   COUNT(CASE WHEN (f:Director) THEN 1 END) AS director_count
-	
-		  RETURN other.title AS RecommendedMovie,
-				 other.id AS Id,
-				 (genre_count * 1.0 + actor_count * 1.5 + director_count * 2.0) AS score
-		  ORDER BY score DESC
-		  LIMIT 10
-		`;
-
-      try {
-        const response = await axios.post("/neo4j/query", {
-          query,
-          params: { title },
-        });
-        return response.data; // Return the recommended movies data
-      } catch (error) {
-        console.error("Error fetching recommended movies:", error);
-        return [];
-      }
     },
     getActor: async (id) => {
       const respData = await fetch(

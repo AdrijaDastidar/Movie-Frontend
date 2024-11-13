@@ -77,7 +77,6 @@ function Home() {
   }  
 
   useEffect(() => {
-    // Reset titles state when searchQuery changes
     dispatch({ type: 'SET_INITIAL' })
     fetchTitles(1, searchQuery)
   }, [searchQuery])
@@ -116,7 +115,7 @@ function Home() {
           image={heroTitle.backdrop_path} 
           title={heroTitle.title} 
           description={heroTitle.overview}
-          link={`/title/${heroTitle.media_type}/${heroTitle.id}`} 
+          link={`top-movies/title/${heroTitle.media_type}/${heroTitle.id}`} 
         />
       }
       <Search setSearch={setSearchQuery} />
