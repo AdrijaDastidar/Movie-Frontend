@@ -43,6 +43,51 @@ export default function Bookings() {
     return date.toLocaleDateString('en-US', options);
   };
 
+  // Booking Analysis Calculations
+  const calculateBookingAnalysis = () => {
+    let totalSpent = 0;
+    const movieCount = {};
+    const snackCount = {};
+
+    bookings.forEach((ticket) => {
+      totalSpent += ticket.cost;
+
+      const showTime = showTimes.find(st => st._id === ticket.showTimeId);
+      const movie = movies.find(m => m._id === (showTime ? showTime.movieId : null));
+      
+      // Count the movies
+      if (movie) {
+        movieCount[movie.title] = (movieCount[movie.title] || 0) + 1;
+      }
+
+      // Count the add-ons
+      ticket.addOn.forEach((addOnId) => {
+        const snack = addOnMapping[addOnId];
+        if (snack) {
+          snackCount[snack] = (snackCount[snack] || 0) + 1;
+        }
+      });
+    });
+
+    // Find the most booked movie
+    const mostBookedMovie = Object.entries(movieCount).reduce((acc, [movie, count]) => {
+      return count > acc.count ? { movie, count } : acc;
+    }, { movie: 'N/A', count: 0 });
+
+    // Find the favorite snack
+    const favoriteSnack = Object.entries(snackCount).reduce((acc, [snack, count]) => {
+      return count > acc.count ? { snack, count } : acc;
+    }, { snack: 'N/A', count: 0 });
+
+    return {
+      totalSpent,
+      mostBookedMovie: mostBookedMovie.movie,
+      favoriteSnack: favoriteSnack.snack,
+    };
+  };
+
+  const analysis = calculateBookingAnalysis();
+
   return (
     <Card>
       <CardHeader>
@@ -115,17 +160,17 @@ export default function Bookings() {
               <div className="text-center">
                 <PieChart className="w-8 h-8 mx-auto text-red-400" />
                 <p className="mt-2 font-semibold">Most Booked</p>
-                <p className="text-sm text-gray-600">Inception</p>
+                <p className="text-sm text-gray-600">{analysis.mostBookedMovie}</p>
               </div>
               <div className="text-center">
                 <DollarSign className="w-8 h-8 mx-auto text-green-500" />
                 <p className="mt-2 font-semibold">Total Spent</p>
-                <p className="text-sm text-gray-600">$67.95</p>
+                <p className="text-sm text-gray-600">${analysis.totalSpent}</p>
               </div>
               <div className="text-center">
                 <Popcorn className="w-8 h-8 mx-auto text-yellow-500" />
                 <p className="mt-2 font-semibold">Favorite Snack</p>
-                <p className="text-sm text-gray-600">Large Popcorn</p>
+                <p className="text-sm text-gray-600">{analysis.favoriteSnack}</p>
               </div>
             </div>
           </CardContent>

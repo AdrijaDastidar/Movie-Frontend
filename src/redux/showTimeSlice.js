@@ -17,43 +17,43 @@ export const fetchShowTimes = createAsyncThunk('showTime/fetchShowTimes', async 
 });
 
 export const addShowTime = createAsyncThunk('showTime/addShowTime', async (showTime, { getState }) => {
-    const { token } = getState().adminSettings; // Get token from state
+    const { token } = getState().adminSettings; 
     const response = await axios.post(`${BASE_URL}/create`, showTime, {
         headers: { 
             'Content-Type': 'application/json',
-            Authorization: `${token}`, // Include token
+            Authorization: `${token}`,
         },
     });
     return response.data;
 });
 
 export const findShowTime = createAsyncThunk('showTime/findShowTime', async (id, { getState }) => {
-    const { token } = getState().adminSettings; // Get token from state
+    const { token } = getState().adminSettings; 
     const response = await axios.get(`${BASE_URL}/${id}`, {
         headers: { 
             'Content-Type': 'application/json',
-            Authorization: `${token}`, // Include token
+            Authorization: `${token}`,
         },
     });
     return response.data;
 });
 
 export const updateShowTime = createAsyncThunk('showTime/updateShowTime', async ({ id, showTime }, { getState }) => {
-    const { token } = getState().adminSettings; // Get token from state
+    const { token } = getState().adminSettings; 
     const response = await axios.put(`${BASE_URL}/${id}`, showTime, {
         headers: { 
             'Content-Type': 'application/json',
-            Authorization: `${token}`, // Include token
+            Authorization: `${token}`, 
         },
     });
     return response.data.showTime;
 });
 
 export const deleteShowTime = createAsyncThunk('showTime/deleteShowTime', async (id, { getState }) => {
-    const { token } = getState().adminSettings; // Get token from state
+    const { token } = getState().adminSettings; 
     await axios.delete(`${BASE_URL}/${id}`, {
         headers: { 
-            Authorization: `${token}`, // Include token
+            Authorization: `${token}`, 
         },
     });
     return id;

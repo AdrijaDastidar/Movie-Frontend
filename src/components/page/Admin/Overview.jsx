@@ -4,18 +4,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Film, BarChart3, PieChart, Users, IndianRupeeIcon, Ticket, } from "lucide-react"
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, PieChart as RePieChart, Pie, Cell } from 'recharts';
 
-
 export default function Overview() {
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
-    // Example static array for movies
     const movies = [
-        { title: 'Movie 1', popularity: 55 },
-        { title: 'Movie 2', popularity: 60 },
-        { title: 'Movie 3', popularity: 15 },
-        { title: 'Movie 4', popularity: 45 },
-        { title: 'Movie 5', popularity: 75 },
-        { title: 'Movie 6', popularity: 20 }
+        { title: 'Venom', popularity: 55 },
+        { title: 'Gladiator II', popularity: 30 },
+        { title: 'Singham Again', popularity: 15 },
+        { title: 'Bhool Bhulaiyaa 3', popularity: 45 },
+        { title: 'Do Patti', popularity: 15 },
+        { title: 'Jigra', popularity: 20 }
     ];
 
     const moviePopularity = movies.map(movie => ({
@@ -30,7 +28,7 @@ export default function Overview() {
         { name: "Thu", revenue: 8000 },
         { name: "Fri", revenue: 12000 },
         { name: "Sat", revenue: 15000 },
-        { name: "Sun", revenue: 10000 },
+        { name: "Sun", revenue: 14000 },
     ];
 
     return (
