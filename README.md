@@ -82,21 +82,6 @@ The application will be available at `http://localhost:3000`.
 
 ---
 
-## 📷 Screenshots
-1. **Home Page with Recommendations**  
-   ![Home Page](./public/assets/screenshots/home.png)
-
-2. **Movie Booking Interface**  
-   ![Booking Page](./public/assets/screenshots/booking.png)
-
-3. **Streaming Page**  
-   ![Streaming Page](./public/assets/screenshots/streaming.png)
-
-4. **Admin Dashboard**  
-   ![Admin Panel](./public/assets/screenshots/admin.png)
-
----
-
 ## 🔮 Future Enhancements
 - **Advanced Recommendations**: Integrate deep learning models for more accurate suggestions.
 - **Social Features**: Allow users to share movie reviews and ratings.
